@@ -1,0 +1,696 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+	
+<h:outputText value="#{Navigation.page}" style="display: none;" />
+
+<h:head>
+	<title><ui:insert name="title">#{Person.person.nachname}, #{Person.person.vornamen} | AhnenDB v2</ui:insert></title>
+	<link href="#{request.contextPath}/css/simple.css" rel="stylesheet"
+		type="text/css" />
+	<h:outputScript target="head">
+	function quickSearch(list, search) {
+		search = search.toLowerCase();
+		
+		try {
+			if (document.getElementById('quicksearch').nextSibling.className.search("searchResults") > -1) {
+				document.getElementById('quicksearch').nextSibling.style.display = 'none';
+			}
+		} catch (e) { }
+		
+		var obj = JSON.parse(list.innerHTML.replace(new RegExp('\'', 'g'), '&quot;'));
+		
+		var result = '<div class="searchResults" style="z-index: 999;"><table class="searchResultsOuterTable"><tbody>';
+		var x = 0;
+			
+		for (var i = 0; i &lt; obj.length; i++) {
+			var exists = false;
+			
+			for (var j = 0; j &lt; obj[i].length; j++) {
+				if (obj[i][j].toLowerCase().indexOf(search) &gt; -1) {
+					exists = true;
+
+					break;
+				}
+			}
+			
+			if (exists) {
+				result += '<tr class="' + (x++ % 2 == 0 ? 'odd' : 'even') + '"><td><a href="#{request.contextPath}/xhtml/index.xhtml?id=' + obj[i][0] + '">' + obj[i][1] + ", " + obj[i][2] + '</a>' + 
+				'<div class="searchResultsBlock"><span class="geburt">' + obj[i][4] + '</span> ' + obj[i][5] + '</div>' + 
+				'<div class="searchResultsBlock"><span class="tod">' + obj[i][8] + '</span> ' + obj[i][9] + '</div>' + 
+				'</td></tr>';
+			}
+		}
+		
+		result += '</tbody></table></div>';
+		
+		console.log(result);
+		
+		document.getElementById('quicksearch').innerHTML = result;
+	}
+	</h:outputScript>
+</h:head>
+
+<h:body>
+	<h:form enctype="multipart/form-data">
+	
+<style>
+body, div, td, th, li, a, span, p, input[type="text"], input[type="file"] {
+	font-family: Verdana;
+	font-size: 12px;
+	color: #000;
+	text-decoration: none;
+}
+
+input[type="text"] {
+    border: 1px solid #ccc;
+    line-height: 20px;
+    padding: 2px 5px;
+}
+
+body {
+	background-color: #f0f0f0;
+	padding: 0;
+	margin: 0;
+}
+
+table {
+	margin-bottom: -2px;
+}
+
+table td, table th {
+	padding: 2px 5px;
+	vertical-align: top;
+	height: 20px;
+	line-height: 20px;
+}
+
+a.button {
+	display: block;
+	border-left: 1px solid #ccc;
+	float: left;
+	padding: 0 5px;
+	white-space: nowrap;
+}
+
+a.button:hover {
+	background-color: #f0f0f0;
+}
+
+td a.button:nth-child(1) {
+	border-left: 0;
+}
+
+.geburt:before {
+	content: '*';
+	margin: 0 2px;
+}
+
+.taufe:before {
+	content: '~';
+	margin: 0 2px;
+}
+
+.tod:before {
+	content: '✝';
+	margin: 0 2px;
+}
+
+.hochzeit:before {
+	content: '∞';
+	margin: 0 2px;
+}
+
+.heading {
+	display: block;
+	font-weight: bold;
+	border-bottom: 1px solid #888;
+	padding: 2px 5px;
+	margin-bottom: 5px;
+}
+
+.content {
+	margin-left: 20px;
+	margin-bottom: 10px;
+}
+
+/* quick info table with reference person (parent, child), 5 columns */
+table.personReference {
+}
+
+table.personReference td:nth-child(1) {
+	width: 200px;
+	color: #000;
+	border: 1px solid #ccc;
+}
+
+table.personReference td:nth-child(2), table.personReference td:nth-child(4) {
+	width: 90px;
+}
+
+table.personReference td:nth-child(2):before {
+	content: '*';
+	margin: 0 2px;
+}
+
+table.personReference td:nth-child(4):before {
+	content: '✝';
+	margin: 0 2px;
+}
+
+table.personReference td:nth-child(3), table.personReference td:nth-child(5) {
+	width: 150px;
+}
+
+table.personReference td {
+	border: 1px solid #ddd;
+	background-color: #fff;
+	color: #AAA;
+}
+
+table.personReference.finished td:nth-child(1) {
+	background-color: #fafafa;
+	background-image: url(#{request.contextPath}/images/lock.png);
+	background-repeat: no-repeat;
+	background-position: 2px center;
+	padding-left: 20px;
+}
+
+table.personReference .person_mann_true {
+	background-image: url(#{request.contextPath}/images/user.png);
+	background-repeat: no-repeat;
+	background-position: left center;
+	padding-left: 20px;
+}
+
+table.personReference .person_mann_false {
+	background-image: url(#{request.contextPath}/images/user_female.png);
+	background-repeat: no-repeat;
+	background-position: left center;
+	padding-left: 20px;
+}
+
+/* information about an eventView, 6 columns */
+table.eventView td:nth-child(1) {
+	width: 90px;
+}
+
+table.eventView td:nth-child(1) input[type="text"] {
+	width: 20px;
+}
+
+table.eventView td:nth-child(1) input[type="text"]:nth-child(4) {
+	width: 40px;
+}
+
+table.eventView td:nth-child(2) {
+	width: 150px;
+}
+
+table.eventView td:nth-child(3) {
+	width: 20px;
+	padding: 0;
+}
+
+table.eventView td:nth-child(4) {
+	width: 150px;
+}
+
+table.eventView td:nth-child(5) {
+	width: 150px;
+}
+
+table.eventView td:nth-child(6) {
+	width: 20px;
+	padding: 0;
+}
+
+table.eventView td {
+	border: 1px solid #ccc;
+	background-color: #fff;
+}
+
+table.eventView td input[type="text"], table.eventView td select {
+	border: 0;
+	padding: 0;
+	margin: 0;
+	line-height: 20px;
+}
+
+table.eventView td input[type="text"] {
+	width: 100%;
+}
+
+table.eventView td select {
+	width: 75px;
+}
+
+/* family Search Checkboxes */
+div.familySearch {
+	text-align: center;
+	display: block;
+	width: 100%;
+	height: 100%;
+	background: url(#{request.contextPath}/images/familysearch.png) no-repeat center;
+	background-size: contain;
+}
+
+div.nachweis {
+	text-align: center;
+	display: block;
+	width: 100%;
+	background: url(#{request.contextPath}/images/page_word.png) no-repeat center;
+	height: 100%;
+}
+
+div.false {
+	background-color: #fff;
+}
+
+div.true {
+	background-color: #0F0;
+	outline: 1px solid #080;
+}
+
+/* name of the person */
+div.name {
+	font-size: 16px;
+	margin-bottom: 20px;
+	padding: 0 5px;
+	margin-top: 20px;
+}
+
+div.name span.bold {
+	font-weight: bold;
+	font-size: 16px;
+}
+
+div.name .images {
+    position: absolute;
+    top: -1px;
+    border: 1px solid black;
+    z-index: 9;
+    padding: 5px;
+    background-color: #ccc;
+    left: 420px;
+    box-shadow: 0 5px 20px -8px black;
+}
+
+div.name .images img {
+	max-height: 100px;
+}
+
+/* stammdaten */
+table.stammdatum td {
+	border: 1px solid #ccc;
+	background-color: #fff;
+}
+
+table.stammdatum td:nth-child(1) {
+	width: 300px;
+}
+
+table.stammdatum td:nth-child(2) {
+	width: 20px;
+	padding: 0;
+}
+
+table.stammdatum td input[type="text"], table.stammdatum td select {
+	border: 0;
+	padding: 0;
+	margin: 0;
+	line-height: 20px;
+}
+
+table.stammdatum td input[type="text"] {
+	width: calc(100% - 20px);
+	padding-left: 20px;
+}
+
+input[type="text"]:focus {
+	outline: 0;
+	background-color: #bbccff;
+}
+
+
+.location {
+	background: url(#{request.contextPath}/images/house.png) no-repeat 2px center; 
+	padding-left: 20px;
+	-webkit-filter: grayscale(100%);
+}
+
+.beruf {
+	background: url(#{request.contextPath}/images/lorry.png) no-repeat 2px center; 
+	padding-left: 20px;
+	-webkit-filter: grayscale(100%);
+}
+
+.konfession {
+	background: url(#{request.contextPath}/images/rainbow.png) no-repeat 2px center; 
+	padding-left: 20px;
+	-webkit-filter: grayscale(100%);
+}
+
+.notiz {
+	border: 1px solid #ccc;
+	background-color: #fff;
+	padding: 2px 5px;
+	vertical-align: top;
+	height: 20px;
+	line-height: 20px;
+	display: block;
+	width: 600px;
+	max-height: 100px;
+	margin-left: 2px;
+	margin-top: 2px;
+}
+
+/* quickinfo */
+.quickinfo {
+	display: block;
+	line-height: 25px;
+	background-color: #aaa;
+	color: #FFF;
+	border-bottom: 1px solid #000;
+	padding: 0 5px;
+	box-shadow: 0 5px 20px -8px black;
+}
+
+.quickinfo .geburt, .quickinfo .tod {
+	color: #FFF;
+}
+
+/* search results */
+.searchResults {
+	position: absolute;
+	top: 51px;
+	right: 25px;
+	width: 300px;
+	max-height: calc(100% - 100px);
+	overflow: auto;
+	background-color: #bbb;
+	border-left: 1px solid #000;
+	border-right: 1px solid #000;
+	border-bottom: 1px solid #000;
+	border-top: 1px dotted #000;
+	box-shadow: 0px 5px 20px 0px rgba(136,136,136,1);
+}
+
+.searchResultsBlock {
+	margin-left: 10px;
+}
+
+.searchResults .even {
+	background-color: #ddd;
+}
+
+.searchResultsOuterTable {
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	border-collapse: collapse;
+}
+
+.searchResultsBlock, .searchResultsBlock td, .searchResultsBlock .geburt, .searchResultsBlock .tod, .searchResultsBlock .hochzeit {
+	font-size: 10px;
+	color: #444;
+	line-height: 12px;
+	height: 12px;
+	padding: 0;
+}
+
+input[type="text"].searchBox {
+	position: absolute;
+	right: 25px;
+	width: 280px;
+	padding: 0;
+	margin: 0;
+	line-height: 25px;
+	border: 0;
+	border-left: 1px solid #000;
+	border-right: 1px solid #000;
+	background-image: url(#{request.contextPath}/images/zoom.png);
+	background-repeat: no-repeat;
+	background-position: 2px center;
+	padding-left: 20px;
+}
+
+/* search for persons */
+
+/* search results */
+.personSearch {
+	width: 300px;
+	margin-left: 2px;
+	margin-top: 2px;
+}
+
+.personSearch input[type="text"] {
+	padding: 0;
+	margin: 0;
+	line-height: 25px;
+	border: 1px solid #ccc;
+	background-image: url(#{request.contextPath}/images/zoom.png);
+	background-repeat: no-repeat;
+	background-position: 2px center;
+	width: calc(100% - 20px);
+	padding-left: 20px;
+}
+
+.personSearchBox {
+	position: relative;
+	width: 300px;
+	max-height: 100px;
+	overflow: auto;
+	background-color: #bbb;
+	border-left: 1px solid #000;
+	border-right: 1px solid #000;
+	border-bottom: 1px solid #000;
+	border-top: 1px dotted #000;
+	box-shadow: 0px 5px 20px 0px rgba(136,136,136,1);
+}
+
+.personSearchBox .newPerson {
+	background-image: url(/test/images/add.png);
+	background-position: 2px center;
+	background-repeat: no-repeat;
+	padding-left: 20px;
+	line-height: 25px;
+	background-color: #fff;
+	border-bottom: 1px solid #000;
+	
+}
+
+.personSearchBox .even {
+	background-color: #ddd;
+}
+
+.personSearchBoxOuterTable {
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	border-collapse: collapse;
+}
+
+/* menubar */
+.menubar {
+	line-height: 25px;
+	border-bottom: 1px solid #000;
+	background-color: #888;
+}
+
+.menubar a {
+	padding-left: 5px;
+	padding-right: 5px;
+	border-right: 1px dotted #000;
+	display: block;
+	float: left;
+	color: #fff;
+}
+
+.menubar a:hover {
+	background-color: #fff;
+	color: #000;
+}
+
+.menubar a.active_true {
+	background-color: #CCC;
+	color: #000;
+}
+
+.menubar a.user_true {
+	background-image: url(#{request.contextPath}/images/user.png);
+	background-repeat: no-repeat;
+	background-position: 5px center;
+	padding-left: 25px;
+}
+
+.menubar a.user_false {
+	background-image: url(#{request.contextPath}/images/user_female.png);
+	background-repeat: no-repeat;
+	background-position: 5px center;
+	padding-left: 25px;
+}
+
+.menubar a.stammbaum {
+	background-image: url(#{request.contextPath}/images/sitemap.png);
+	background-repeat: no-repeat;
+	background-position: 5px center;
+	padding-left: 25px;
+}
+
+/* content box */
+.contentBox {
+	overflow: auto;
+	height: calc(100vh - 78px);
+}
+
+/* footer */
+.footerBox {
+	position: absolute;
+	bottom: 0;
+	height: 25px;
+	line-height: 25px;
+	background-color: #aaa;
+	color: #FFF;
+	border-top: 1px solid #000;
+	padding: 0 5px;
+	box-shadow: 0 -5px 20px -8px #888;
+	width: calc(100% - 10px);
+	overflow: hidden;
+}
+
+.footerBox:hover {
+	height: auto;
+	max-height: 50%;
+	overflow: auto;
+}
+
+.message {
+	display: block;
+}
+
+/* file documents */
+.document {
+	background: url(#{request.contextPath}/images/page_white.png) no-repeat left center;
+	padding-left: 20px;
+}
+
+.document.png, .document.jpg, .document.gif {
+	background-image: url(#{request.contextPath}/images/page_white_picture.png);
+}
+
+.document.pdf {
+	background-image: url(#{request.contextPath}/images/page_white_acrobat.png);
+}
+
+.document.doc, .document.docx {
+	background-image: url(#{request.contextPath}/images/page_white_word.png);
+}
+
+/* button bar */
+.buttonbar {
+    display: inline-block;
+    width: auto;
+    height: 25px;
+    border-bottom: 1px solid black;
+    line-height: 25px;
+    z-index: 9;
+    position: relative;
+    top: -5px;
+    background-color: #ccc;
+    left: 10px;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    box-shadow: 0 5px 20px -8px black;
+}
+
+.buttonbar a {
+	display: inline-block;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.buttonbar a:hover {
+	background-color: #fff;
+}
+
+/* Stammbaum */
+.stammbaum_person_true_false {
+    background-image: url(/test/images/father.png);
+    background-repeat: no-repeat;
+    background-position: 0 9px;
+}
+
+.stammbaum_person_true_false div, .stammbaum_person_false_false div {
+    height: 50px;
+    padding-left: 10px;
+    overflow: auto;
+    white-space: nowrap;
+}
+
+.stammbaum_person_false_false {
+    background-image: url(/test/images/mother.png);
+    background-repeat: no-repeat;
+    background-position: 0 -489px;
+}
+
+.stammbaum_person_false_false .geburt, .stammbaum_person_false_false .tod, 
+.stammbaum_person_true_false .geburt, .stammbaum_person_true_false .tod,
+.stammbaum_person_false_true .geburt, .stammbaum_person_false_true .tod, 
+.stammbaum_person_true_true .geburt, .stammbaum_person_true_true .tod {
+	display: block;
+	font-size: 10px;
+	line-height: 12px;
+	color: #888;
+}
+
+</style>
+	
+		<h:panelGroup layout="block" styleClass="menubar">
+			<h:commandLink value="#{Person.person.nachname}, #{Person.person.vornamen}" styleClass="user_#{Person.person.mann} active_#{Navigation.page == 'PERSON'}" actionListener="#{Navigation.navigate}">
+				<f:param name="action" value="PERSON" />
+			</h:commandLink>
+			<h:commandLink value="Stammbaum" styleClass="stammbaum active_#{Navigation.page == 'STAMMBAUM'}" actionListener="#{Navigation.navigate}">
+				<f:param name="action" value="STAMMBAUM" />
+			</h:commandLink>
+			<h:commandLink value="Migration" styleClass="stammbaum active_#{Navigation.page == 'MIGRATION'}" actionListener="#{Navigation.navigate}">
+				<f:param name="action" value="MIGRATION" />
+			</h:commandLink>
+			<h:panelGroup layout="block" style="clear: both;" />
+		</h:panelGroup>
+		<h:panelGroup layout="block" styleClass="quickinfo">
+			<h:outputText value="#{Person.person.kekule} " />
+			<h:outputText value="#{Person.person.nachname}, #{Person.person.vornamen}, " />
+			<h:outputText value="#{Person.person.geburt}" styleClass="geburt"><f:converter converterId="event" /></h:outputText>
+			<h:outputText value=" #{Person.person.geburt.location}, " />
+			<h:outputText value="#{Person.person.tod}" styleClass="tod"><f:converter converterId="event" /></h:outputText>
+			<h:outputText value=" #{Person.person.tod.location}" />
+			
+			<ui:include src="suche/persons.xhtml" />
+		</h:panelGroup>
+
+		<h:panelGroup styleClass="contentBox" layout="block">
+			<h:panelGroup rendered="#{Navigation.page == 'PERSON'}" layout="block" style="padding: 5px; position: relative;">
+				<ui:include src="person/person.xhtml"></ui:include>
+			</h:panelGroup>
+			
+			<h:panelGroup rendered="#{Navigation.page == 'STAMMBAUM'}" layout="block" style="padding: 5px;">
+				<ui:include src="stammbaum/stammbaum.xhtml" />
+			</h:panelGroup>
+			
+			<h:panelGroup rendered="#{Navigation.page == 'MIGRATION'}" layout="block" style="padding: 5px;">
+				<ui:include src="migration/migration.xhtml" />
+			</h:panelGroup>
+		</h:panelGroup>
+		
+		<h:panelGroup styleClass="footerBox" layout="block">
+			<ui:repeat value="#{Messages.messages}" var="message">
+				<h:outputText value="#{message}" styleClass="message" />
+			</ui:repeat>
+		</h:panelGroup>
+	</h:form>
+</h:body>
+</html>

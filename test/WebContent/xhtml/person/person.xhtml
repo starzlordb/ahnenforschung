@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
+	xmlns:h="http://java.sun.com/jsf/html">
+	
+<h:panelGroup layout="block" styleClass="buttonbar">
+	<h:commandLink value="Bearbeiten" actionListener="#{Person.switchEditable}" rendered="#{!Person.editable}" />
+	<h:commandLink value="Ansehen" actionListener="#{Person.switchEditable}" rendered="#{Person.editable}" />
+	<h:commandLink value="Speichern" actionListener="#{Person.persist}" rendered="#{Person.editable}" />
+</h:panelGroup>
+
+<h:panelGroup layout="block" styleClass="name">
+	<h:panelGroup rendered="#{!Person.editable}">
+		<h:outputText value="#{Person.person.nachname}" styleClass="bold" />
+		<h:outputText value=", " />
+		<h:outputText value="#{Person.person.vornamen}" />
+		<h:outputText value="#{Person.person.kekule}" style="display: block; color: #aaa;" />
+	</h:panelGroup>
+	<h:panelGroup rendered="#{Person.editable}">
+		<h:inputText value="#{Person.person.nachname}" styleClass="bold" />
+		<h:outputText value=", " />
+		<h:inputText value="#{Person.person.vornamen}" />
+		<h:outputText value="#{Person.person.kekule}" style="display: block; color: #aaa;" />
+	</h:panelGroup>
+	
+	<h:panelGroup layout="block" styleClass="images">
+		<ui:repeat value="#{Person.person.documents}" var="document">
+			<h:commandLink value="#{document.filename}" styleClass="document #{document.extension}" action="#{document.download}" rendered="#{document.id == null || document.id == 0}" />
+			<h:graphicImage value="/db_images/#{document.uuid}" rendered="#{document.id &gt; 0}"></h:graphicImage>
+		</ui:repeat>
+	</h:panelGroup>
+</h:panelGroup>
+
+<ui:include src="eltern.xhtml" />
+
+<ui:include src="stammdaten.xhtml" />
+
+<ui:include src="ehe.xhtml" />
+
+<ui:include src="kinder.xhtml" />
+
+</html>

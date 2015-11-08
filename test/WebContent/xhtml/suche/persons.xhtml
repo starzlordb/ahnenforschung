@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+	
+<h:inputText value="#{Person.search}" onkeyup="quickSearch(this.nextSibling, this.value);" valueChangeListener="#{Person.searchPersons}" styleClass="searchBox"><f:ajax /></h:inputText>
+
+<h:panelGroup layout="block" style="display: none;" id="suche">
+	<h:outputText value="[" />
+	<ui:repeat value="#{Person.allPersons}" var="person" varStatus="_suche">
+		<h:outputText value="," rendered="#{!_suche.first}" />
+		<h:outputText value="['#{person.id}', '#{person.nachname}', '#{person.vornamen}', '#{person.wohnort}', '#{person.geburtJahr}', '#{person.geburtOrt}', '#{person.taufeJahr}', '#{person.taufeOrt}', '#{person.todJahr}', '#{person.todOrt}']" />
+	</ui:repeat>
+	<h:outputText value="]" />
+</h:panelGroup>
+<div id="quicksearch"></div>
+
+<h:panelGroup layout="block" rendered="#{Person.searchedPersons != null}" styleClass="searchResults" style="z-index: 999;">
+	<h:dataTable value="#{Person.searchedPersons}" var="personX" rowClasses="odd, even" styleClass="searchResultsOuterTable">
+		<h:column>
+			<h:commandLink value="#{personX.nachname}, #{personX.vornamen}" actionListener="#{Navigation.open}">
+				<f:param name="personId" value="#{personX.id}" />
+			</h:commandLink>
+			<h:panelGroup layout="block" styleClass="searchResultsBlock">
+				<h:outputText value="#{personX.geburt}" styleClass="geburt"><f:converter converterId="event" /></h:outputText>
+				<h:outputText value=" #{personX.geburt.location}" />
+			</h:panelGroup>
+			<h:dataTable value="#{personX.hochzeiten}" var="hochzeit" styleClass="searchResultsBlock">
+				<h:column>
+					<h:outputText value="#{hochzeit.hochzeit}" styleClass="hochzeit"><f:converter converterId="event" /></h:outputText>
+					<h:outputText value=" #{hochzeit.hochzeit.location}" />
+				</h:column>
+			</h:dataTable>
+			<h:panelGroup layout="block" styleClass="searchResultsBlock">
+				<h:outputText value="#{personX.tod}" styleClass="tod"><f:converter converterId="event" /></h:outputText>
+				<h:outputText value=" #{personX.tod.location}" />
+			</h:panelGroup>				
+		</h:column>
+	</h:dataTable>
+</h:panelGroup> 
+
+</html>

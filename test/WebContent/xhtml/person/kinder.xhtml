@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
+	xmlns:h="http://java.sun.com/jsf/html">
+
+<h:outputText value="Kinder" styleClass="heading" />
+
+<h:panelGroup styleClass="content" layout="block">
+	<h:outputText value="Keine Kinder vorhanden" rendered="#{fn:length(Person.person.kinder) == 0}" />
+	<h:dataTable value="#{Person.person.kinder}" var="kind" styleClass="personReference content" rendered="#{fn:length(Person.person.kinder) &gt; 0}">
+		<h:column>
+			<h:commandLink
+				value="#{kind.nachname}, #{kind.vornamen}"
+				actionListener="#{Navigation.open}" styleClass="person_mann_#{kind.mann}">
+				<f:param name="personId" value="#{kind.id}" />
+			</h:commandLink>
+		</h:column>
+		<h:column>
+			<h:outputText value="#{kind.geburt}">
+				<f:converter converterId="event" />
+			</h:outputText>
+		</h:column>
+		<h:column>
+			<h:outputText value="#{kind.geburt.location}" />
+		</h:column>
+		<h:column>
+			<h:outputText value="#{kind.tod}">
+				<f:converter converterId="event" />
+			</h:outputText>
+		</h:column>
+		<h:column>
+			<h:outputText value="#{kind.tod.location}" />
+		</h:column>
+	</h:dataTable>
+</h:panelGroup>
+
+
+</html>

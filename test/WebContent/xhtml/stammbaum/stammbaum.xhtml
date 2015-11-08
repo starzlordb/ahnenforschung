@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+<style>
+
+div.generation {
+	/*width: 200px;*/
+	float: left;
+}
+
+div.generation td {
+	line-height: 20px;
+	height: 20px;
+	padding: 0;
+	margin: 0;
+}
+
+</style>
+
+<h:commandLink value="Export" actionListener="#{ExcelExport.generateExport}" />
+
+<ui:repeat value="#{Stammbaum.stammbaum}" var="maxGen" varStatus="_status">
+	<h:panelGroup rendered="#{_status.last}">
+		<h:panelGroup layout="block" styleClass="generation">
+			<h:outputText value="Kinder" />
+		
+			<h:panelGroup layout="block" style="height: #{fn:length(maxGen) * 25}px; display: table-cell; vertical-align: middle;">
+				<h:dataTable value="#{Person.person.kinder}" var="person" style="border-collapse: collapse;">
+					<h:column>
+						<h:panelGroup layout="block">
+							<h:commandLink value="#{person.nachname}, #{person.vornamen}" actionListener="#{Navigation.open}" style="white-space: nowrap; display: block; padding-left: 10px; padding-right: 10px;">
+								<f:param name="personId" value="#{person.id}" />
+							</h:commandLink>
+						</h:panelGroup>
+					</h:column>
+				</h:dataTable>
+			</h:panelGroup>
+		</h:panelGroup>
+	
+		<ui:repeat value="#{Stammbaum.stammbaum}" var="generation" varStatus="genId" >
+			<h:panelGroup layout="block" styleClass="generation">
+				<h:outputText value="Person" rendered="#{genId.index == 0}" />
+				<h:commandLink value="" style="background: url(#{request.contextPath}/images/delete.png) no-repeat center; width: 20px; height: 20px; display: block; float: right;" actionListener="#{Stammbaum.closeGeneration}" rendered="#{genId.last &amp;&amp; genId.index > 1}" />
+				<h:outputText value="Eltern" rendered="#{genId.index == 1}" />
+				<h:outputText value="Großeltern" rendered="#{genId.index == 2}" />
+				<h:outputText value="Ur-Großeltern" rendered="#{genId.index == 3}" />
+				<h:outputText value="Ur-Ur-Großeltern" rendered="#{genId.index == 4}" />
+				<h:outputText value="#{genId.index - 2}x Ur-Großeltern" rendered="#{genId.index > 4}" />
+				
+				<h:dataTable value="#{generation}" var="person" varStatus="_male" style="border-collapse: collapse;">
+					<h:column>
+						<h:panelGroup layout="block" styleClass="stammbaum_person_#{person.mann}_#{genId.first}" style="background-position-y: #{(50 * fn:length(maxGen) / fn:length(generation) - 50) / 2 + 9}px; display: table-cell; vertical-align: middle; height: #{50 * fn:length(maxGen) / fn:length(generation)}px;" rendered="#{person != null &amp;&amp; person.mann}">
+							<h:panelGroup layout="block" style="display: block;">
+								
+								<h:commandLink value="#{person.nachname}, #{person.vornamen}" actionListener="#{Navigation.open}">
+									<f:param name="personId" value="#{person.id}" />
+								</h:commandLink>
+								<h:outputText value=" #{person.kekule}" style="color: #888;" />
+								<h:panelGroup styleClass="geburt">
+									<h:outputText value="#{person.geburt}"><f:converter converterId="event" /></h:outputText>
+									<h:outputText value=" #{person.geburt.location}" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="tod">
+									<h:outputText value="#{person.tod}"><f:converter converterId="event" /></h:outputText>
+									<h:outputText value=" #{person.tod.location}" />
+								</h:panelGroup>
+							</h:panelGroup>
+						</h:panelGroup>
+						<h:panelGroup layout="block" styleClass="stammbaum_person_#{person.mann}_#{genId.first}" style="background-position-y: #{(50 * fn:length(maxGen) / fn:length(generation) - 50) / 2 + 9 - 500}px; display: table-cell; vertical-align: middle; height: #{50 * fn:length(maxGen) / fn:length(generation)}px;" rendered="#{person != null &amp;&amp; !person.mann}">
+							<h:panelGroup layout="block" style="display: block;">
+								
+								<h:commandLink value="#{person.nachname}, #{person.vornamen}" actionListener="#{Navigation.open}">
+									<f:param name="personId" value="#{person.id}" />
+								</h:commandLink>
+								<h:outputText value=" #{person.kekule}" style="color: #888;" />
+								<h:panelGroup styleClass="geburt">
+									<h:outputText value="#{person.geburt}"><f:converter converterId="event" /></h:outputText>
+									<h:outputText value=" #{person.geburt.location}" />
+								</h:panelGroup>
+								<h:panelGroup styleClass="tod">
+									<h:outputText value="#{person.tod}"><f:converter converterId="event" /></h:outputText>
+									<h:outputText value=" #{person.tod.location}" />
+								</h:panelGroup>
+							</h:panelGroup>
+						</h:panelGroup>
+						
+						<h:panelGroup layout="block" style="display: table-cell; vertical-align: top; height: #{50 * fn:length(maxGen) / fn:length(generation)}px;" rendered="#{person == null}">
+							<h:panelGroup layout="block" styleClass="stammbaum_person_null" />
+						</h:panelGroup>
+					</h:column>
+				</h:dataTable>
+			</h:panelGroup>
+		</ui:repeat>
+		
+		<h:panelGroup layout="block" styleClass="generation">
+			<h:commandLink value="Weitere Generation laden" actionListener="#{Stammbaum.openNewGeneration}" style="background: url(#{request.contextPath}/images/add.png) no-repeat left center; line-height: 22px;padding-left: 20px;" />
+		</h:panelGroup>
+	</h:panelGroup>
+</ui:repeat>
+
+</html>

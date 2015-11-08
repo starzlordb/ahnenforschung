@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+<h:inputText value="#{Migration.documentsPath}" />
+<h:selectOneMenu value="#{Migration.documentType}">
+	<f:selectItems value="#{Person.eventTypeSelect}" />
+</h:selectOneMenu>
+<h:commandLink value="Dokumente einlesen" styleClass="button" actionListener="#{Migration.importDocuments}" />
+
+</html>

@@ -1,0 +1,172 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
+	xmlns:h="http://java.sun.com/jsf/html">
+
+<h:panelGroup styleClass="heading">
+	<h:outputText value="Ehe" />
+	<h:commandLink value=" (Hinzufügen)" actionListener="#{Person.person.addHochzeit}" rendered="#{Person.editable}" style="font-weight: normal;" />
+</h:panelGroup>
+
+<h:panelGroup layout="block" styleClass="content">
+	<ui:repeat value="#{Person.person.hochzeiten}" var="hochzeit" varStatus="_hochzeit">
+		<h:panelGrid columns="2" rendered="#{hochzeit.deleted == false}">
+			<h:panelGroup>
+				<h:outputText value="#{_hochzeit.index + 1}." rendered="#{hochzeit.id &gt; 0}" />
+				<h:outputText value="*" rendered="#{hochzeit.id == null || hochzeit.id == 0}" />
+				<h:commandLink value="(X)" actionListener="#{hochzeit.remove}" rendered="#{Person.editable}" />
+			</h:panelGroup>
+			
+			<h:panelGroup>
+				<h:panelGrid columns="5" styleClass="personReference" rendered="#{Person.person.mann}">
+					<h:commandLink
+						value="#{hochzeit.frau.nachname}, #{hochzeit.frau.vornamen}"
+						actionListener="#{Navigation.open}" styleClass="person_mann_#{hochzeit.frau.mann}">
+						<f:param name="personId" value="#{hochzeit.frau.id}" />
+					</h:commandLink>
+					<h:outputText value="#{hochzeit.frau.geburt}">
+						<f:converter converterId="event" />
+					</h:outputText>
+					<h:outputText value="#{hochzeit.frau.geburt.location}" />
+					<h:outputText value="#{hochzeit.frau.tod}">
+						<f:converter converterId="event" />
+					</h:outputText>
+					<h:outputText value="#{hochzeit.frau.tod.location}" />
+				</h:panelGrid>
+				
+				<h:panelGrid columns="5" styleClass="personReference" rendered="#{!Person.person.mann}">
+					<h:commandLink
+						value="#{hochzeit.mann.nachname}, #{hochzeit.mann.vornamen}"
+						actionListener="#{Navigation.open}" styleClass="person_mann_#{hochzeit.mann.mann}">
+						<f:param name="personId" value="#{hochzeit.mann.id}" />
+					</h:commandLink>
+					<h:outputText value="#{hochzeit.mann.geburt}">
+						<f:converter converterId="event" />
+					</h:outputText>
+					<h:outputText value="#{hochzeit.mann.geburt.location}" />
+					<h:outputText value="#{hochzeit.mann.tod}">
+						<f:converter converterId="event" />
+					</h:outputText>
+					<h:outputText value="#{hochzeit.mann.tod.location}" />
+				</h:panelGrid>
+				
+				<h:panelGroup layout="block" rendered="#{Person.editable}" styleClass="personSearch">
+					<h:inputText value="#{hochzeit.searchbox}" onkeyup="if (event.keyCode == 13) { this.nextSibling.onclick(); }"><f:ajax /></h:inputText>
+					<h:commandLink value="?" actionListener="#{hochzeit.searchMann}" style="display: none;" rendered="#{!Person.person.mann}" />
+					<h:commandLink value="?" actionListener="#{hochzeit.searchFrau}" style="display: none;" rendered="#{Person.person.mann}" />
+					
+					<h:panelGroup layout="block" rendered="#{fn:length(hochzeit.searchbox) > 0}" styleClass="personSearchBox" style="position: absolute;">
+						<h:panelGroup styleClass="newPerson" layout="block">
+							<h:commandLink value="Als '#{fn:split(hochzeit.searchbox, ',')[0]}, #{fn:split(hochzeit.searchbox, ',')[1]}' anlegen" actionListener="#{hochzeit.addNeuFrau}" rendered="#{fn:split(hochzeit.searchbox, ',')[1] != null &amp;&amp; Person.person.mann}" />
+							<h:commandLink value="Als '#{fn:split(hochzeit.searchbox, ',')[0]}, ?' anlegen" actionListener="#{hochzeit.addNeuFrau}" rendered="#{fn:split(hochzeit.searchbox, ',')[1] == null &amp;&amp; Person.person.mann}" />
+							<h:commandLink value="Als '#{fn:split(hochzeit.searchbox, ',')[0]}, #{fn:split(hochzeit.searchbox, ',')[1]}' anlegen" actionListener="#{hochzeit.addNeuMann}" rendered="#{fn:split(hochzeit.searchbox, ',')[1] != null &amp;&amp; !Person.person.mann}" />
+							<h:commandLink value="Als '#{fn:split(hochzeit.searchbox, ',')[0]}, ?' anlegen" actionListener="#{hochzeit.addNeuMann}" rendered="#{fn:split(hochzeit.searchbox, ',')[1] == null &amp;&amp; !Person.person.mann}" />
+						</h:panelGroup>
+						<h:dataTable value="#{hochzeit.partner}" var="partner" rowClasses="odd, even" styleClass="personSearchBoxOuterTable">
+							<h:column>
+								<h:commandLink value="#{partner.nachname}, #{partner.vornamen}" actionListener="#{hochzeit.changePartner}">
+									<f:param name="personId" value="#{partner.id}" />
+								</h:commandLink>
+								
+								<h:panelGroup layout="block" styleClass="searchResultsBlock">
+									<h:outputText value="#{partner.geburt}" styleClass="geburt"><f:converter converterId="event" /></h:outputText>
+									<h:outputText value=" #{partner.geburt.location}" />
+								</h:panelGroup>
+								<h:panelGroup layout="block" styleClass="searchResultsBlock">
+									<h:outputText value="#{partner.tod}" styleClass="tod"><f:converter converterId="event" /></h:outputText>
+									<h:outputText value=" #{partner.tod.location}" />
+								</h:panelGroup>
+							</h:column>
+						</h:dataTable>
+					</h:panelGroup>
+				</h:panelGroup>
+	
+				<h:panelGrid columns="7" styleClass="eventView" rendered="#{!Person.editable}">
+					<h:outputText value="#{hochzeit.hochzeit}" styleClass="hochzeit">
+						<f:converter converterId="event" />
+					</h:outputText>
+					<h:outputText value="#{hochzeit.hochzeit.location}" />
+					<h:panelGroup layout="block" styleClass="familySearch #{hochzeit.hochzeit.familySearch}" />
+					<h:outputText value="#{hochzeit.hochzeit.source}" />
+					<h:outputText value="#{hochzeit.hochzeit.notice}" />
+					<h:panelGroup layout="block" styleClass="nachweis #{hochzeit.hochzeit.nachweis}" />
+					<h:panelGroup layout="block">
+						<ui:repeat value="#{hochzeit.hochzeit.documents}" var="document">
+							<h:commandLink value="#{document.filename}" styleClass="document #{document.extension}" action="#{document.download}" />
+						</ui:repeat>
+					</h:panelGroup>
+				</h:panelGrid>
+				<h:panelGrid columns="7" styleClass="eventView" rendered="#{Person.editable &amp;&amp; hochzeit.hochzeit != null}">
+					<h:panelGroup styleClass="hochzeit">
+						<h:selectOneMenu value="#{hochzeit.hochzeit.typ}">
+							<f:selectItems value="#{Person.eventDateModifier}" />
+						</h:selectOneMenu>
+						<h:inputText value="#{hochzeit.hochzeit.tag}" onkeydown="if ((new Array(8, 9, 37, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57)).indexOf(event.keyCode) == -1) return false;" onkeyup="if (event.keyCode == 190) { this.parentNode.getElementsByTagName('input')[1].focus(); this.parentNode.getElementsByTagName('input')[1].select(); }" />
+						<h:outputText value="." />
+						<h:inputText value="#{hochzeit.hochzeit.monat}" onkeydown="if ((new Array(8, 9, 37, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57)).indexOf(event.keyCode) == -1) return false;" onkeyup="if (event.keyCode == 190) { this.parentNode.getElementsByTagName('input')[2].focus(); this.parentNode.getElementsByTagName('input')[2].select(); }" />
+						<h:outputText value="." />
+						<h:inputText value="#{hochzeit.hochzeit.jahr}" />
+					</h:panelGroup>
+					<h:inputText value="#{hochzeit.hochzeit.location}" />
+					<h:panelGroup layout="block" style="cursor: pointer;" styleClass="familySearch #{hochzeit.hochzeit.familySearch}" onclick="var checked = this.getElementsByTagName('input')[0].checked; this.getElementsByTagName('input')[0].checked = !checked; if (checked) { this.className = 'familySearch false'; } else { this.className = 'familySearch true'; }">
+						<h:selectBooleanCheckbox value="#{hochzeit.hochzeit.familySearch}" style="display: none;" />
+					</h:panelGroup>
+					<h:inputText value="#{hochzeit.hochzeit.source}" />
+					<h:inputText value="#{hochzeit.hochzeit.notice}" />
+					<h:panelGroup layout="block" style="cursor: pointer;" styleClass="nachweis #{hochzeit.hochzeit.nachweis}" onclick="var checked = this.getElementsByTagName('input')[0].checked; this.getElementsByTagName('input')[0].checked = !checked; if (checked) { this.className = 'nachweis false'; } else { this.className = 'nachweis true'; }">
+						<h:selectBooleanCheckbox value="#{hochzeit.hochzeit.nachweis}" style="display: none;" />
+					</h:panelGroup>
+					<h:panelGroup layout="block">
+						<ui:repeat value="#{hochzeit.hochzeit.documents}" var="document">
+							<h:commandLink value="#{document.filename}" styleClass="document #{document.extension}" action="#{document.download}" />
+						</ui:repeat>
+					</h:panelGroup>
+				</h:panelGrid>			
+				
+				<h:outputText value="Kinder" rendered="#{fn:length(hochzeit.kinder) &gt; 0}" />
+		
+				<h:dataTable value="#{hochzeit.kinder}" var="kind" styleClass="personReference" rendered="#{fn:length(hochzeit.kinder) &gt; 0}">
+					<h:column>
+						<h:commandLink
+							value="#{kind.nachname}, #{kind.vornamen}"
+							actionListener="#{Navigation.open}" styleClass="person_mann_#{kind.mann}">
+							<f:param name="personId" value="#{kind.id}" />
+						</h:commandLink>
+					</h:column>
+					<h:column>
+						<h:outputText value="#{kind.geburt}">
+							<f:converter converterId="event" />
+						</h:outputText>
+					</h:column>
+					<h:column>
+						<h:outputText value="#{kind.geburt.location}" />
+					</h:column>
+					<h:column>
+						<h:outputText value="#{kind.tod}">
+							<f:converter converterId="event" />
+						</h:outputText>
+					</h:column>
+					<h:column>
+						<h:outputText value="#{kind.tod.location}" />
+					</h:column>
+				</h:dataTable>
+			</h:panelGroup>
+		</h:panelGrid>
+	</ui:repeat>
+				
+	<h:panelGrid columns="2" styleClass="stammdatum" rendered="#{Person.editable}" style="width: 647px;">
+		<h:panelGroup>
+			<h:inputFile value="#{Person.uploadHochzeit}" />
+			<h:selectOneMenu value="#{Person.selectedHochzeitUuid}">
+				<f:selectItems value="#{Person.hochzeitUuidSelect}" />
+			</h:selectOneMenu>
+		</h:panelGroup>
+		<h:commandLink value="Dokument hochladen" actionListener="#{Person.uploadHochzeit}" styleClass="button" />
+	</h:panelGrid>
+</h:panelGroup>
+
+
+</html>
