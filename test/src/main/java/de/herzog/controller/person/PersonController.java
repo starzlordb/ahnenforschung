@@ -769,7 +769,6 @@ public class PersonController extends AbstractController {
 		
 		Collections.sort(persons, new Comparator<PersonView>() {
 
-			@Override
 			public int compare(PersonView o1, PersonView o2) {
 				String name1 = o1.getNachname() + ", " + o1.getVornamen();
 				String name2 = o2.getNachname() + ", " + o2.getVornamen();
