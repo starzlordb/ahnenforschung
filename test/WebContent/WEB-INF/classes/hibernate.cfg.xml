@@ -8,7 +8,7 @@
         <!-- Settings for a local HSQL (testing) database. -->  
         <property name="dialect">org.hibernate.dialect.PostgreSQLDialect</property>  
         <property name="connection.driver_class">org.postgresql.Driver</property>  
-        <property name="connection.url">jdbc:postgresql://localhost:5432/ahnen_neu</property>  
+        <property name="connection.url">jdbc:postgresql://192.168.3.101:5432/ahnen_neu</property>  
         <property name="connection.username">ahnen_neu</property>  
         <property name="connection.password">ahnen_neu</property>  
         
