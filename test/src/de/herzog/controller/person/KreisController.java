@@ -15,6 +15,7 @@ public class KreisController extends AbstractController {
 	private double winkel = 180d;
 	
 
+	@SuppressWarnings("unused")
 	private void generateKreis(long personId) {
 		//data = generatePerson(id, 1);
 		List<PersonView> data = new ArrayList<PersonView>();
@@ -89,7 +90,7 @@ public class KreisController extends AbstractController {
 						color = data.get(d).isMann() ? "#D5D5FF" : "#FFD5D5";
 					}
 
-					fontSize = fontSize < Math.ceil(radiusSegment / text.length() * 1.4) ? fontSize : Math.ceil(radiusSegment / text.length() * 1.4);
+					//fontSize = fontSize < Math.ceil(radiusSegment / text.length() * 1.4) ? fontSize : Math.ceil(radiusSegment / text.length() * 1.4);
 					//text = phi.' '.nummer.' '.text;
 					text = " " + text;
                     fontSize = (int) Math.ceil(fontSize);
