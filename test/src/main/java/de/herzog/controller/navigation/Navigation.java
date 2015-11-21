@@ -40,6 +40,10 @@ public class Navigation extends AbstractController {
 			setPage(PageEnum.PERSON);
 		}
 	}
+	
+	public void navigate(ActionEvent event) {
+		navigate();
+	}
 
 	public void open(ActionEvent event) {
 		long id = getRequestParameterAsLong("personId");
