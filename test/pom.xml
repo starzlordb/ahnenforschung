@@ -16,60 +16,46 @@
 			<version>9.4-1204-jdbc41</version>
 		</dependency>
 
-<!--<dependency>
- <groupId>javax.servlet</groupId>
- <artifactId>servlet-api</artifactId>
- <version>3.1</version>
- <scope>provided</scope>
-</dependency>
--->
-<dependency>
- <groupId>com.sun.faces</groupId>
- <artifactId>jsf-api</artifactId>
- <version>2.2.4</version>
-</dependency>
+		<!--<dependency> <groupId>javax.servlet</groupId> <artifactId>servlet-api</artifactId> 
+			<version>3.1</version> <scope>provided</scope> </dependency> -->
+		<dependency>
+			<groupId>com.sun.faces</groupId>
+			<artifactId>jsf-api</artifactId>
+			<version>2.2.4</version>
+		</dependency>
 
-<dependency>
- <groupId>com.sun.faces</groupId>
- <artifactId>mojarra-jsf-api</artifactId>
- <version>2.0.0-b04</version>
-</dependency>
+		<dependency>
+			<groupId>com.sun.faces</groupId>
+			<artifactId>mojarra-jsf-api</artifactId>
+			<version>2.0.0-b04</version>
+		</dependency>
 
-<dependency>
- <groupId>com.sun.faces</groupId>
- <artifactId>jsf-impl</artifactId>
- <version>2.2.4</version>
-</dependency>
+		<dependency>
+			<groupId>com.sun.faces</groupId>
+			<artifactId>jsf-impl</artifactId>
+			<version>2.2.4</version>
+		</dependency>
 
-<dependency>
- <groupId>com.sun.faces</groupId>
- <artifactId>mojarra-jsf-impl</artifactId>
- <version>2.0.0-b04</version>
-</dependency>
-
-<dependency>
- <groupId>javax.servlet.jsp</groupId>
- <artifactId>javax.servlet.jsp-api</artifactId>
- <version>2.3.1</version>
-</dependency>
-
-<dependency>
-  <groupId>javax.servlet</groupId>
-  <artifactId>jstl</artifactId>
-  <version>1.1.2</version>
-</dependency>
-<!-- 
+		<dependency>
+			<groupId>com.sun.faces</groupId>
+			<artifactId>mojarra-jsf-impl</artifactId>
+			<version>2.0.0-b04</version>
+		</dependency>
 
 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
-			<artifactId>jsp-api</artifactId>
-			<version>2.2</version>
+			<artifactId>javax.servlet.jsp-api</artifactId>
+			<version>2.3.1</version>
 		</dependency>
+
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
-			<version>1.2</version>
-		</dependency>-->
+			<version>1.1.2</version>
+		</dependency>
+		<!-- <dependency> <groupId>javax.servlet.jsp</groupId> <artifactId>jsp-api</artifactId> 
+			<version>2.2</version> </dependency> <dependency> <groupId>javax.servlet</groupId> 
+			<artifactId>jstl</artifactId> <version>1.2</version> </dependency> -->
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-core</artifactId>
@@ -105,16 +91,9 @@
 			<artifactId>javax.faces-api</artifactId>
 			<version>2.2</version>
 		</dependency>
-<!-- 		<dependency>
-			<groupId>com.sun.faces</groupId>
-			<artifactId>jsf-api</artifactId>
-			<version>2.1.7</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.faces</groupId>
-			<artifactId>jsf-impl</artifactId>
-			<version>2.1.7</version>
-		</dependency>-->
+		<!-- <dependency> <groupId>com.sun.faces</groupId> <artifactId>jsf-api</artifactId> 
+			<version>2.1.7</version> </dependency> <dependency> <groupId>com.sun.faces</groupId> 
+			<artifactId>jsf-impl</artifactId> <version>2.1.7</version> </dependency> -->
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
@@ -152,26 +131,36 @@
 		<finalName>Ahnenforschung</finalName>
 		<plugins>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>appassembler-maven-plugin</artifactId>
-				<version>1.1.1</version>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.10</version>
+        <executions>
+          <execution>
+            <id>copy-dependencies</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>target</outputDirectory>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>false</overWriteSnapshots>
+              <overWriteIfNewer>true</overWriteIfNewer>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
 				<configuration>
-					<assembleDirectory>target</assembleDirectory>
-					<programs>
-						<program>
+					<archive>
+						<manifest>
 							<mainClass>de.herzog.Runner</mainClass>
-							<name>webapp</name>
-						</program>
-					</programs>
+							<addClasspath>true</addClasspath>
+						</manifest>
+					</archive>
 				</configuration>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>assemble</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>
