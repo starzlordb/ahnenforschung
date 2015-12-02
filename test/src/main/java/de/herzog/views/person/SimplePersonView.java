@@ -8,9 +8,9 @@ public class SimplePersonView {
 	private String nachname;
 	private String vornamen;
 	private boolean mann;
-	private int geburtJahr;
-	private int taufeJahr;
-	private int todJahr;
+	private Integer geburtJahr;
+	private Integer taufeJahr;
+	private Integer todJahr;
 	private String geburtOrt;
 	private String taufeOrt;
 	private String todOrt;
@@ -64,22 +64,22 @@ public class SimplePersonView {
 	public void setMann(boolean mann) {
 		this.mann = mann;
 	}
-	public int getGeburtJahr() {
+	public Integer getGeburtJahr() {
 		return geburtJahr;
 	}
-	public void setGeburtJahr(int geburtJahr) {
+	public void setGeburtJahr(Integer geburtJahr) {
 		this.geburtJahr = geburtJahr;
 	}
-	public int getTaufeJahr() {
+	public Integer getTaufeJahr() {
 		return taufeJahr;
 	}
-	public void setTaufeJahr(int taufeJahr) {
+	public void setTaufeJahr(Integer taufeJahr) {
 		this.taufeJahr = taufeJahr;
 	}
-	public int getTodJahr() {
+	public Integer getTodJahr() {
 		return todJahr;
 	}
-	public void setTodJahr(int todJahr) {
+	public void setTodJahr(Integer todJahr) {
 		this.todJahr = todJahr;
 	}
 	public String getGeburtOrt() {
