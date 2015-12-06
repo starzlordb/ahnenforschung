@@ -74,7 +74,7 @@ var EventUtils = {
 	 * Suchfunktion ohne Request
 	 */
 	quickSearch: function(list, search) {
-		search = search.toLowerCase().trim().split(" ");
+		search = search.toLowerCase().trim().replace(/[^\w\s]/gi, '').split(" ");
 		
 		try {
 			if (document.getElementById('quicksearch').nextSibling.className.search("searchResults") > -1) {
