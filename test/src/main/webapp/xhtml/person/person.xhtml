@@ -17,16 +17,20 @@
 		<h:outputText value="#{Person.person.nachname}" styleClass="bold" />
 		<h:outputText value=", " />
 		<h:outputText value="#{Person.person.vornamen}" />
-		<h:outputText value="#{Person.person.kekule}" style="display: block; color: #aaa;" />
+		<ui:repeat value="#{Person.person.kekule}" var="kekule">
+			<h:outputText value="#{kekule}" style="display: block; color: #aaa;" />
+		</ui:repeat>
 	</h:panelGroup>
 	<h:panelGroup rendered="#{Person.editable}">
 		<h:inputText value="#{Person.person.nachname}" styleClass="bold" />
 		<h:outputText value=", " />
 		<h:inputText value="#{Person.person.vornamen}" />
-		<h:outputText value="#{Person.person.kekule}" style="display: block; color: #aaa;" />
+		<ui:repeat value="#{Person.person.kekule}" var="kekule">
+			<h:outputText value="#{kekule}" style="display: block; color: #aaa;" />
+		</ui:repeat>
 	</h:panelGroup>
 	
-	<h:panelGroup layout="block" styleClass="images">
+	<h:panelGroup layout="block" styleClass="images" rendered="#{fn:length(Person.person.documents) > 0}">
 		<ui:repeat value="#{Person.person.documents}" var="document">
 			<h:commandLink value="#{document.filename}" styleClass="document #{document.extension}" action="#{document.download}" rendered="#{document.id == null || document.id == 0}" />
 			<h:graphicImage value="/db_images/#{document.uuid}" rendered="#{document.id &gt; 0}"></h:graphicImage>

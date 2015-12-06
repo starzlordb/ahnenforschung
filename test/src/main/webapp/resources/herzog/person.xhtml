@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+
+<composite:interface>
+	<composite:attribute name="person" />
+	<composite:attribute name="navigation" method-signature="java.lang.String action()" />
+	<composite:attribute name="rendered" />
+</composite:interface>
+	  
+<composite:implementation>
+	<h:panelGrid columns="5" styleClass="personReference" rendered="#{cc.attrs.rendered}">
+		<h:commandLink
+			value="#{cc.attrs.person.nachname}, #{cc.attrs.person.vornamen}"
+			action="#{cc.attrs.navigation}" styleClass="person_mann_#{cc.attrs.person.mann}">
+			<f:param name="personId" value="#{cc.attrs.person.id}" />
+		</h:commandLink>
+		<h:outputText value="#{cc.attrs.person.geburt}">
+			<f:converter converterId="event" />
+		</h:outputText>
+		<h:outputText value="#{cc.attrs.person.geburt.location}" />
+		<h:outputText value="#{cc.attrs.person.tod}">
+			<f:converter converterId="event" />
+		</h:outputText>
+		<h:outputText value="#{cc.attrs.person.tod.location}" />
+	</h:panelGrid>
+</composite:implementation>
+
+</html>

@@ -4,7 +4,8 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
-	xmlns:h="http://xmlns.jcp.org/jsf/html">
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:herzog="http://java.sun.com/jsf/composite/herzog">
 
 <h:panelGroup layout="block" styleClass="heading">
 	<h:outputText value="Eltern" styleClass="tmp" />
@@ -44,86 +45,27 @@
 </h:panelGroup>
 
 <h:panelGroup layout="block" styleClass="content">
-	<h:panelGrid columns="5" styleClass="personReference" rendered="#{Person.person.vaterId != -1 &amp;&amp; !Person.editable}">
-		<h:commandLink
-			value="#{Person.person.vater.nachname}, #{Person.person.vater.vornamen}"
-			actionListener="#{Navigation.open}" styleClass="person_mann_#{Person.person.vater.mann}">
-			<f:param name="personId" value="#{Person.person.vater.id}" />
-		</h:commandLink>
-		<h:outputText value="#{Person.person.vater.geburt}">
-			<f:converter converterId="event" />
-		</h:outputText>
-		<h:outputText value="#{Person.person.vater.geburt.location}" />
-		<h:outputText value="#{Person.person.vater.tod}">
-			<f:converter converterId="event" />
-		</h:outputText>
-		<h:outputText value="#{Person.person.vater.tod.location}" />
-	</h:panelGrid>
-	<h:panelGrid columns="1" styleClass="personReference finished" rendered="#{Person.person.vaterId == -1 &amp;&amp; !Person.editable}">
-		<h:outputText value="kein Vater gefunden" styleClass="person_mann_true" />
-	</h:panelGrid>
-	<h:panelGrid columns="7" styleClass="personReference" rendered="#{Person.person.vaterId != -1 &amp;&amp; Person.editable}">
-		<h:commandLink
-			value="#{Person.person.vater.nachname}, #{Person.person.vater.vornamen}"
-			actionListener="#{Navigation.open}" styleClass="person_mann_#{Person.person.vater.mann}">
-			<f:param name="personId" value="#{Person.person.vater.id}" />
-		</h:commandLink>
-		<h:outputText value="#{Person.person.vater.geburt}">
-			<f:converter converterId="event" />
-		</h:outputText>
-		<h:outputText value="#{Person.person.vater.geburt.location}" />
-		<h:outputText value="#{Person.person.vater.tod}">
-			<f:converter converterId="event" />
-		</h:outputText>
-		<h:outputText value="#{Person.person.vater.tod.location}" />
-		<h:commandLink value="Entfernen" actionListener="#{Person.person.removeVater}" styleClass="button" />
-		<h:commandLink value="Dead End" actionListener="#{Person.person.closeVater}" styleClass="button" />
-	</h:panelGrid>
-	<h:panelGrid columns="2" styleClass="personReference finished" rendered="#{Person.person.vaterId == -1 &amp;&amp; Person.editable}">
-		<h:outputText value="kein Vater gefunden" styleClass="person_mann_true" />
-		<h:commandLink value="Entfernen" actionListener="#{Person.person.removeVater}" styleClass="button" />
+	<h:panelGrid columns="2" styleClass="empty">
+		<herzog:person person="#{Person.person.vater}" navigation="#{Navigation.open}" rendered="#{Person.person.vaterId != -1}" />
+		<h:panelGrid columns="1" styleClass="personReference finished" rendered="#{Person.person.vaterId == -1}">
+			<h:outputText value="kein Vater gefunden" styleClass="person_mann_true" />
+		</h:panelGrid>
+		<h:panelGrid columns="2" styleClass="" rendered="#{Person.editable}">
+			<h:commandLink value="Entfernen" actionListener="#{Person.person.removeVater}" styleClass="button" />
+			<h:commandLink value="Dead End" actionListener="#{Person.person.closeVater}" styleClass="button" />
+		</h:panelGrid>
 	</h:panelGrid>
 	
-	<h:panelGrid columns="5" styleClass="personReference" rendered="#{Person.person.mutterId != -1 &amp;&amp; !Person.editable}">
-		<h:commandLink
-			value="#{Person.person.mutter.nachname}, #{Person.person.mutter.vornamen}"
-			actionListener="#{Navigation.open}" styleClass="person_mann_#{Person.person.mutter.mann}">
-			<f:param name="personId" value="#{Person.person.mutter.id}" />
-		</h:commandLink>
-		<h:outputText value="#{Person.person.mutter.geburt}">
-			<f:converter converterId="event" />
-		</h:outputText>
-		<h:outputText value="#{Person.person.mutter.geburt.location}" />
-		<h:outputText value="#{Person.person.mutter.tod}">
-			<f:converter converterId="event" />
-		</h:outputText>
-		<h:outputText value="#{Person.person.mutter.tod.location}" />
+	<h:panelGrid columns="2" styleClass="empty">
+		<herzog:person person="#{Person.person.mutter}" navigation="#{Navigation.open}" rendered="#{Person.person.mutterId != -1}" />
+		<h:panelGrid columns="1" styleClass="personReference finished" rendered="#{Person.person.mutterId == -1}">
+			<h:outputText value="keine Mutter gefunden" styleClass="person_mann_false" />
+		</h:panelGrid>
+		<h:panelGrid columns="2" rendered="#{Person.editable}">
+			<h:commandLink value="Entfernen" actionListener="#{Person.person.removeMutter}" styleClass="button" />
+			<h:commandLink value="Dead End" actionListener="#{Person.person.closeMutter}" styleClass="button" />
+		</h:panelGrid>
 	</h:panelGrid>
-	<h:panelGrid columns="1" styleClass="personReference finished" rendered="#{Person.person.mutterId == -1 &amp;&amp; !Person.editable}">
-		<h:outputText value="keine Mutter gefunden" styleClass="person_mann_false" />
-	</h:panelGrid>
-	<h:panelGrid columns="7" styleClass="personReference" rendered="#{Person.person.mutterId != -1 &amp;&amp; Person.editable}">
-		<h:commandLink
-			value="#{Person.person.mutter.nachname}, #{Person.person.mutter.vornamen}"
-			actionListener="#{Navigation.open}" styleClass="person_mann_#{Person.person.mutter.mann}">
-			<f:param name="personId" value="#{Person.person.mutter.id}" />
-		</h:commandLink>
-		<h:outputText value="#{Person.person.mutter.geburt}">
-			<f:converter converterId="event" />
-		</h:outputText>
-		<h:outputText value="#{Person.person.mutter.geburt.location}" />
-		<h:outputText value="#{Person.person.mutter.tod}">
-			<f:converter converterId="event" />
-		</h:outputText>
-		<h:outputText value="#{Person.person.mutter.tod.location}" />
-		<h:commandLink value="Entfernen" actionListener="#{Person.person.removeMutter}" styleClass="button" />
-		<h:commandLink value="Dead End" actionListener="#{Person.person.closeMutter}" styleClass="button" />
-	</h:panelGrid>
-	<h:panelGrid columns="2" styleClass="personReference finished" rendered="#{Person.person.mutterId == -1 &amp;&amp; Person.editable}">
-		<h:outputText value="keine Mutter gefunden" styleClass="person_mann_false" />
-		<h:commandLink value="Entfernen" actionListener="#{Person.person.removeMutter}" styleClass="button" />
-	</h:panelGrid>
-	
 </h:panelGroup>
 
 </html>

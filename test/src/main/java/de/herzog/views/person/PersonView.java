@@ -45,7 +45,7 @@ public class PersonView extends PersonBean implements AbstractView {
 	
 	private List<PersonView> kinder;
 	
-	private List<Long> kekule;
+	private List<KekuleView> kekule;
 	
 	private Part upload;
 	private EventTypeEnum uploadType;
@@ -259,7 +259,7 @@ public class PersonView extends PersonBean implements AbstractView {
 		this.controller = controller;
 	}
 
-	public List<Long> getKekule() {
+	public List<KekuleView> getKekule() {
 		if (kekule == null) {
 			kekule = controller.calculateKekule(getId());
 		}
@@ -344,7 +344,7 @@ public class PersonView extends PersonBean implements AbstractView {
 				return (exact ? "" : "etwa ") + formatBuilder.toFormatter().print(period);
 			}
 		} catch (Exception e) {
-			log.error(e);
+			log.error(e.getMessage() + " @" + e.getStackTrace()[0].getLineNumber());
 		}
 		
 		return "";

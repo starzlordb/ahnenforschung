@@ -4,136 +4,25 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
-	xmlns:h="http://xmlns.jcp.org/jsf/html">
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:herzog="http://java.sun.com/jsf/composite/herzog">
 
 <h:outputText value="Stammdaten" styleClass="heading" />
 
 <h:panelGroup layout="block" styleClass="content">
-	<h:panelGrid columns="7" styleClass="eventView" rendered="#{!Person.editable}">
-		<h:outputText value="#{Person.person.geburt}" styleClass="geburt">
-			<f:converter converterId="event" />
-		</h:outputText>
-		<h:outputText value="#{Person.person.geburt.location}" />
-		<h:panelGroup layout="block" styleClass="familySearch #{Person.person.geburt.familySearch}" />
-		<h:outputText value="#{Person.person.geburt.source}" />
-		<h:outputText value="#{Person.person.geburt.notice}" />
-		<h:panelGroup layout="block" styleClass="nachweis #{Person.person.geburt.nachweis}" />
-		<h:panelGroup layout="block">
-			<ui:repeat value="#{Person.person.geburt.documents}" var="document">
-				<h:commandLink value="#{document.filename}" styleClass="document #{document.extension}" action="#{document.download}" />
-			</ui:repeat>
-		</h:panelGroup>
-	</h:panelGrid>
-	<h:panelGrid columns="7" styleClass="eventView" rendered="#{Person.editable}">
-		<h:panelGroup styleClass="geburt">
-			<h:selectOneMenu value="#{Person.person.geburt.typ}">
-				<f:selectItems value="#{Person.eventDateModifier}" />
-			</h:selectOneMenu>
-			<h:inputText value="#{Person.person.geburt.tag}" onkeydown="if ((new Array(8, 9, 37, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57)).indexOf(event.keyCode) == -1) return false;" onkeyup="if (event.keyCode == 190) { this.parentNode.getElementsByTagName('input')[1].focus(); this.parentNode.getElementsByTagName('input')[1].select(); }" />
-			<h:outputText value="." />
-			<h:inputText value="#{Person.person.geburt.monat}" onkeydown="if ((new Array(8, 9, 37, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57)).indexOf(event.keyCode) == -1) return false;" onkeyup="if (event.keyCode == 190) { this.parentNode.getElementsByTagName('input')[2].focus(); this.parentNode.getElementsByTagName('input')[2].select(); }" />
-			<h:outputText value="." />
-			<h:inputText value="#{Person.person.geburt.jahr}" />
-		</h:panelGroup>
-		<h:inputText value="#{Person.person.geburt.location}" />
-		<h:panelGroup layout="block" style="cursor: pointer;" styleClass="familySearch #{Person.person.geburt.familySearch}" onclick="var checked = this.getElementsByTagName('input')[0].checked; this.getElementsByTagName('input')[0].checked = !checked; if (checked) { this.className = 'familySearch false'; } else { this.className = 'familySearch true'; }">
-			<h:selectBooleanCheckbox value="#{Person.person.geburt.familySearch}" style="display: none;" />
-		</h:panelGroup>
-		<h:inputText value="#{Person.person.geburt.source}" />
-		<h:inputText value="#{Person.person.geburt.notice}" />
-		<h:panelGroup layout="block" style="cursor: pointer;" styleClass="nachweis #{Person.person.geburt.nachweis}" onclick="var checked = this.getElementsByTagName('input')[0].checked; this.getElementsByTagName('input')[0].checked = !checked; if (checked) { this.className = 'nachweis false'; } else { this.className = 'nachweis true'; }">
-			<h:selectBooleanCheckbox value="#{Person.person.geburt.nachweis}" style="display: none;" />
-		</h:panelGroup>
-		<h:panelGroup layout="block">
-			<ui:repeat value="#{Person.person.geburt.documents}" var="document">
-				<h:commandLink value="#{document.filename}" styleClass="document #{document.extension}" action="#{document.download}" />
-			</ui:repeat>
-		</h:panelGroup>
+	<h:panelGrid columns="7" styleClass="eventView header">
+		<h:outputText value="Datum" />
+		<h:outputText value="Ort" />
+		<h:panelGroup layout="block" styleClass="familySearch false" />
+		<h:outputText value="Quelle" />
+		<h:outputText value="Notiz" />
+		<h:panelGroup layout="block" styleClass="nachweis false" />
+		<h:outputText value="Dokumente" />		
 	</h:panelGrid>
 	
-	<h:panelGrid columns="7" styleClass="eventView" rendered="#{!Person.editable}">
-		<h:outputText value="#{Person.person.taufe}" styleClass="taufe">
-			<f:converter converterId="event" />
-		</h:outputText>
-		<h:outputText value="#{Person.person.taufe.location}" />
-		<h:panelGroup layout="block" styleClass="familySearch #{Person.person.taufe.familySearch}" />
-		<h:outputText value="#{Person.person.taufe.source}" />
-		<h:outputText value="#{Person.person.taufe.notice}" />
-		<h:panelGroup layout="block" styleClass="nachweis #{Person.person.taufe.nachweis}" />
-		<h:panelGroup layout="block">
-			<ui:repeat value="#{Person.person.taufe.documents}" var="document">
-				<h:commandLink value="#{document.filename}" styleClass="document #{document.extension}" action="#{document.download}" />
-			</ui:repeat>
-		</h:panelGroup>
-	</h:panelGrid>
-	<h:panelGrid columns="7" styleClass="eventView" rendered="#{Person.editable}">
-		<h:panelGroup styleClass="taufe">
-			<h:selectOneMenu value="#{Person.person.taufe.typ}">
-				<f:selectItems value="#{Person.eventDateModifier}" />
-			</h:selectOneMenu>
-			<h:inputText value="#{Person.person.taufe.tag}" onkeydown="if ((new Array(8, 9, 37, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57)).indexOf(event.keyCode) == -1) return false;" onkeyup="if (event.keyCode == 190) { this.parentNode.getElementsByTagName('input')[1].focus(); this.parentNode.getElementsByTagName('input')[1].select(); }" />
-			<h:outputText value="." />
-			<h:inputText value="#{Person.person.taufe.monat}" onkeydown="if ((new Array(8, 9, 37, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57)).indexOf(event.keyCode) == -1) return false;" onkeyup="if (event.keyCode == 190) { this.parentNode.getElementsByTagName('input')[2].focus(); this.parentNode.getElementsByTagName('input')[2].select(); }" />
-			<h:outputText value="." />
-			<h:inputText value="#{Person.person.taufe.jahr}" />
-		</h:panelGroup>
-		<h:inputText value="#{Person.person.taufe.location}" />
-		<h:panelGroup layout="block" style="cursor: pointer;" styleClass="familySearch #{Person.person.taufe.familySearch}" onclick="var checked = this.getElementsByTagName('input')[0].checked; this.getElementsByTagName('input')[0].checked = !checked; if (checked) { this.className = 'familySearch false'; } else { this.className = 'familySearch true'; }">
-			<h:selectBooleanCheckbox value="#{Person.person.taufe.familySearch}" style="display: none;" />
-		</h:panelGroup>
-		<h:inputText value="#{Person.person.taufe.source}" />
-		<h:inputText value="#{Person.person.taufe.notice}" />
-		<h:panelGroup layout="block" style="cursor: pointer;" styleClass="nachweis #{Person.person.taufe.nachweis}" onclick="var checked = this.getElementsByTagName('input')[0].checked; this.getElementsByTagName('input')[0].checked = !checked; if (checked) { this.className = 'nachweis false'; } else { this.className = 'nachweis true'; }">
-			<h:selectBooleanCheckbox value="#{Person.person.taufe.nachweis}" style="display: none;" />
-		</h:panelGroup>
-		<h:panelGroup layout="block">
-			<ui:repeat value="#{Person.person.taufe.documents}" var="document">
-				<h:commandLink value="#{document.filename}" styleClass="document #{document.extension}" action="#{document.download}" />
-			</ui:repeat>
-		</h:panelGroup>
-	</h:panelGrid>
-	
-	<h:panelGrid columns="7" styleClass="eventView" rendered="#{!Person.editable}">
-		<h:outputText value="#{Person.person.tod}" styleClass="tod">
-			<f:converter converterId="event" />
-		</h:outputText>
-		<h:outputText value="#{Person.person.tod.location}" />
-		<h:panelGroup layout="block" styleClass="familySearch #{Person.person.tod.familySearch}" />
-		<h:outputText value="#{Person.person.tod.source}" />
-		<h:outputText value="#{Person.person.tod.notice}" />
-		<h:panelGroup layout="block" styleClass="nachweis #{Person.person.tod.nachweis}" />
-		<h:panelGroup layout="block">
-			<ui:repeat value="#{Person.person.tod.documents}" var="document">
-				<h:commandLink value="#{document.filename}" styleClass="document #{document.extension}" action="#{document.download}" />
-			</ui:repeat>
-		</h:panelGroup>
-	</h:panelGrid>
-	<h:panelGrid columns="7" styleClass="eventView" rendered="#{Person.editable}">
-		<h:panelGroup styleClass="tod">
-			<h:selectOneMenu value="#{Person.person.tod.typ}">
-				<f:selectItems value="#{Person.eventDateModifier}" />
-			</h:selectOneMenu>
-			<h:inputText value="#{Person.person.tod.tag}" onkeydown="if ((new Array(8, 9, 37, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57)).indexOf(event.keyCode) == -1) return false;" onkeyup="if (event.keyCode == 190) { this.parentNode.getElementsByTagName('input')[1].focus(); this.parentNode.getElementsByTagName('input')[1].select(); }" />
-			<h:outputText value="." />
-			<h:inputText value="#{Person.person.tod.monat}" onkeydown="if ((new Array(8, 9, 37, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57)).indexOf(event.keyCode) == -1) return false;" onkeyup="if (event.keyCode == 190) { this.parentNode.getElementsByTagName('input')[2].focus(); this.parentNode.getElementsByTagName('input')[2].select(); }" />
-			<h:outputText value="." />
-			<h:inputText value="#{Person.person.tod.jahr}" />
-		</h:panelGroup>
-		<h:inputText value="#{Person.person.tod.location}" />
-		<h:panelGroup layout="block" style="cursor: pointer;" styleClass="familySearch #{Person.person.tod.familySearch}" onclick="var checked = this.getElementsByTagName('input')[0].checked; this.getElementsByTagName('input')[0].checked = !checked; if (checked) { this.className = 'familySearch false'; } else { this.className = 'familySearch true'; }">
-			<h:selectBooleanCheckbox value="#{Person.person.tod.familySearch}" style="display: none;" />
-		</h:panelGroup>
-		<h:inputText value="#{Person.person.tod.source}" />
-		<h:inputText value="#{Person.person.tod.notice}" />
-		<h:panelGroup layout="block" style="cursor: pointer;" styleClass="nachweis #{Person.person.tod.nachweis}" onclick="var checked = this.getElementsByTagName('input')[0].checked; this.getElementsByTagName('input')[0].checked = !checked; if (checked) { this.className = 'nachweis false'; } else { this.className = 'nachweis true'; }">
-			<h:selectBooleanCheckbox value="#{Person.person.tod.nachweis}" style="display: none;" />
-		</h:panelGroup>
-		<h:panelGroup layout="block">
-			<ui:repeat value="#{Person.person.tod.documents}" var="document">
-				<h:commandLink value="#{document.filename}" styleClass="document #{document.extension}" action="#{document.download}" />
-			</ui:repeat>
-		</h:panelGroup>
-	</h:panelGrid>
+	<herzog:event event="#{Person.person.geburt}" styleClass="geburt" editable="#{Person.editable}" />
+	<herzog:event event="#{Person.person.taufe}" styleClass="taufe" editable="#{Person.editable}" />
+	<herzog:event event="#{Person.person.tod}" styleClass="tod" editable="#{Person.editable}" />
 	
 	<h:panelGrid columns="1" styleClass="stammdatum">
 		<h:outputText value="#{Person.person.period}" />
@@ -149,48 +38,11 @@
 		<h:commandLink value="Dokument hochladen" actionListener="#{Person.uploadHochzeit}" styleClass="button" />
 	</h:panelGrid>
 
-	<h:panelGrid columns="2" styleClass="stammdatum" rendered="#{!Person.editable}">
-		<h:outputText value="#{Person.person.location}" styleClass="location" />
-		<h:panelGroup layout="block" styleClass="familySearch #{Person.person.locationFamilySearch}" />
-	</h:panelGrid>
-	<h:panelGrid columns="2" styleClass="stammdatum" rendered="#{Person.editable}">
-		<h:inputText value="#{Person.person.location}" styleClass="location" />
-		<h:panelGroup layout="block" style="cursor: pointer;" styleClass="familySearch #{Person.person.locationFamilySearch}" onclick="var checked = this.getElementsByTagName('input')[0].checked; this.getElementsByTagName('input')[0].checked = !checked; if (checked) { this.className = 'familySearch false'; } else { this.className = 'familySearch true'; }">
-			<h:selectBooleanCheckbox value="#{Person.person.locationFamilySearch}" style="display: none;" />
-		</h:panelGroup>
-	</h:panelGrid>
+	<herzog:data value="#{Person.person.location}" fs="#{Person.person.locationFamilySearch}" styleClass="location" editable="#{Person.editable}" />
+	<herzog:data value="#{Person.person.konfession}" fs="#{Person.person.konfessionFamilySearch}" styleClass="konfession" editable="#{Person.editable}" />
+	<herzog:data value="#{Person.person.beruf}" fs="#{Person.person.berufFamilySearch}" styleClass="beruf" editable="#{Person.editable}" />
 	
-	<h:panelGrid columns="2" styleClass="stammdatum" rendered="#{!Person.editable}">
-		<h:outputText value="#{Person.person.konfession}" styleClass="konfession" />
-		<h:panelGroup layout="block" styleClass="familySearch #{Person.person.konfessionFamilySearch}" />
-	</h:panelGrid>
-	<h:panelGrid columns="3" styleClass="stammdatum" rendered="#{Person.editable}">
-		<h:inputText value="#{Person.person.konfession}" styleClass="konfession" />
-		<h:panelGroup layout="block" style="cursor: pointer;" styleClass="familySearch #{Person.person.konfessionFamilySearch}" onclick="var checked = this.getElementsByTagName('input')[0].checked; this.getElementsByTagName('input')[0].checked = !checked; if (checked) { this.className = 'familySearch false'; } else { this.className = 'familySearch true'; }">
-			<h:selectBooleanCheckbox value="#{Person.person.konfessionFamilySearch}" style="display: none;" />
-		</h:panelGroup>
-		<h:panelGroup>
-			<a class="button" href="#" onclick="this.parentNode.parentNode.getElementsByTagName('input')[0].value = 'evangelisch'; return false;">ev</a>
-			<a class="button" href="#" onclick="this.parentNode.parentNode.getElementsByTagName('input')[0].value = 'lutherisch'; return false;">luth</a>
-			<a class="button" href="#" onclick="this.parentNode.parentNode.getElementsByTagName('input')[0].value = 'reformiert'; return false;">ref</a>
-			<a class="button" href="#" onclick="this.parentNode.parentNode.getElementsByTagName('input')[0].value = 'römisch-katholisch'; return false;">rk</a>
-			<a class="button" href="#" onclick="this.parentNode.parentNode.getElementsByTagName('input')[0].value = 'katholisch'; return false;">kath</a>
-		</h:panelGroup>
-	</h:panelGrid>
-	
-	<h:panelGrid columns="2" styleClass="stammdatum" rendered="#{!Person.editable}">
-		<h:outputText value="#{Person.person.beruf}" styleClass="beruf" />
-		<h:panelGroup layout="block" styleClass="familySearch #{Person.person.berufFamilySearch}" />
-	</h:panelGrid>
-	<h:panelGrid columns="2" styleClass="stammdatum" rendered="#{Person.editable}">
-		<h:inputText value="#{Person.person.beruf}" styleClass="beruf" />
-		<h:panelGroup layout="block" style="cursor: pointer;" styleClass="familySearch #{Person.person.berufFamilySearch}" onclick="var checked = this.getElementsByTagName('input')[0].checked; this.getElementsByTagName('input')[0].checked = !checked; if (checked) { this.className = 'familySearch false'; } else { this.className = 'familySearch true'; }">
-			<h:selectBooleanCheckbox value="#{Person.person.berufFamilySearch}" style="display: none;" />
-		</h:panelGroup>
-	</h:panelGrid>
-	
-	<h:outputText value="#{Person.person.notice}" styleClass="notiz" rendered="#{!Person.editable}" />
-	<h:inputTextarea value="#{Person.person.notice}" styleClass="notiz" rendered="#{Person.editable}" />
+	<h:inputTextarea escape="false" value="#{Person.person.notice}" styleClass="notiz" disabled="#{!Person.editable}" />
 </h:panelGroup>
 
 

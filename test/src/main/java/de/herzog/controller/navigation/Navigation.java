@@ -45,7 +45,7 @@ public class Navigation extends AbstractController {
 		navigate();
 	}
 
-	public void open(ActionEvent event) {
+	public void open() {
 		long id = getRequestParameterAsLong("personId");
 		open(id);
 	}

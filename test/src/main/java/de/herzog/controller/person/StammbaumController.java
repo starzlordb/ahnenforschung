@@ -24,7 +24,7 @@ public class StammbaumController extends AbstractController {
 	
 	private List<List<PersonView>> stammbaum;
 	
-	private int generation = 3;
+	private int generation = 1;
 	
 	@Override
 	protected void init() {

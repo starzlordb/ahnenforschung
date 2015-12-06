@@ -32,6 +32,7 @@ import de.herzog.util.Logger;
 import de.herzog.views.BinaryView;
 import de.herzog.views.EventView;
 import de.herzog.views.hochzeit.HochzeitView;
+import de.herzog.views.person.KekuleView;
 import de.herzog.views.person.PersonView;
 import de.herzog.views.person.SimplePersonView;
 
@@ -515,18 +516,18 @@ public class PersonController extends AbstractController {
 		this.person = person;
 	}
 
-	public List<Long> calculateKekule(Long personId) {
+	public List<KekuleView> calculateKekule(Long personId) {
 		if (personId == null) {
 			return null;
 		}
 		
 		if (personId.equals(getConfiguration().getPrimaryPersonId())) {
-			List<Long> kekule = new ArrayList<Long>();
-			kekule.add(1l);
+			List<KekuleView> kekule = new ArrayList<KekuleView>();
+			kekule.add(new KekuleView(1l, 1l));
 			return kekule;
 		}
 		
-		List<Long> kekule = new ArrayList<Long>();
+		List<KekuleView> kekule = new ArrayList<KekuleView>();
 		
 		PersonBean person = personRepository.getById(personId);
 		
@@ -534,10 +535,10 @@ public class PersonController extends AbstractController {
 		
 		if (person != null && children != null) {
 			for (PersonBean child : children) {
-				List<Long> subList = calculateKekule(child.getId());
+				List<KekuleView> subList = calculateKekule(child.getId());
 				
-				for (Long entry : subList) {
-					kekule.add(entry * 2l + (person.isMann() ? 0l : 1l));
+				for (KekuleView entry : subList) {
+					kekule.add(new KekuleView(entry.getKekule() * 2l + (person.isMann() ? 0l : 1l), entry.getGeneration() + 1l));
 				}
 			}
 		}

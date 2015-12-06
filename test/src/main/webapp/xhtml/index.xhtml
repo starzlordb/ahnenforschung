@@ -9,49 +9,9 @@
 
 <h:head>
 	<title><ui:insert name="title">#{Person.person.nachname}, #{Person.person.vornamen} | AhnenDB v2</ui:insert></title>
+	<script src="../js/event.js" />
 	<link href="#{request.contextPath}/css/simple.css" rel="stylesheet"
 		type="text/css" />
-	<h:outputScript target="head">
-	function quickSearch(list, search) {
-		search = search.toLowerCase();
-		
-		try {
-			if (document.getElementById('quicksearch').nextSibling.className.search("searchResults") > -1) {
-				document.getElementById('quicksearch').nextSibling.style.display = 'none';
-			}
-		} catch (e) { }
-		
-		var obj = JSON.parse(list.innerHTML.replace(new RegExp('\'', 'g'), '&quot;'));
-		
-		var result = '<div class="searchResults" style="z-index: 999;"><table class="searchResultsOuterTable"><tbody>';
-		var x = 0;
-			
-		for (var i = 0; i &lt; obj.length; i++) {
-			var exists = false;
-			
-			for (var j = 0; j &lt; obj[i].length; j++) {
-				if (obj[i][j].toLowerCase().indexOf(search) &gt; -1) {
-					exists = true;
-
-					break;
-				}
-			}
-			
-			if (exists) {
-				result += '<tr class="' + (x++ % 2 == 0 ? 'odd' : 'even') + '"><td><a href="#{request.contextPath}/xhtml/index.xhtml?id=' + obj[i][0] + '">' + obj[i][1] + ", " + obj[i][2] + '</a>' + 
-				'<div class="searchResultsBlock"><span class="geburt">' + obj[i][4] + '</span> ' + obj[i][5] + '</div>' + 
-				'<div class="searchResultsBlock"><span class="tod">' + obj[i][8] + '</span> ' + obj[i][9] + '</div>' + 
-				'</td></tr>';
-			}
-		}
-		
-		result += '</tbody></table></div>';
-		
-		console.log(result);
-		
-		document.getElementById('quicksearch').innerHTML = result;
-	}
-	</h:outputScript>
 </h:head>
 
 <h:body>
@@ -81,6 +41,15 @@ table {
 	margin-bottom: -2px;
 }
 
+table.empty {
+	margin-bottom: -4px;
+}
+
+table.empty td, table.empty th {
+	padding: 0;
+}
+
+table.empty td table td, table.empty th table th,
 table td, table th {
 	padding: 2px 5px;
 	vertical-align: top;
@@ -195,19 +164,20 @@ table.personReference .person_mann_false {
 
 /* information about an eventView, 6 columns */
 table.eventView td:nth-child(1) {
-	width: 90px;
+	width: 165px;
 }
 
 table.eventView td:nth-child(1) input[type="text"] {
 	width: 20px;
+	text-align:right;
 }
 
-table.eventView td:nth-child(1) input[type="text"]:nth-child(4) {
+table.eventView td:nth-child(1) input[type="text"]:nth-child(3) {
 	width: 40px;
 }
 
 table.eventView td:nth-child(2) {
-	width: 150px;
+	width: 200px;
 }
 
 table.eventView td:nth-child(3) {
@@ -215,10 +185,12 @@ table.eventView td:nth-child(3) {
 	padding: 0;
 }
 
+/* source */
 table.eventView td:nth-child(4) {
-	width: 150px;
+	width: 200px;
 }
 
+/* notice */
 table.eventView td:nth-child(5) {
 	width: 150px;
 }
@@ -233,6 +205,12 @@ table.eventView td {
 	background-color: #fff;
 }
 
+table.eventView.header td {
+	border: 1px solid #ccc;
+	background-color: #eee;
+	font-weight: bold;
+}
+
 table.eventView td input[type="text"], table.eventView td select {
 	border: 0;
 	padding: 0;
@@ -245,7 +223,7 @@ table.eventView td input[type="text"] {
 }
 
 table.eventView td select {
-	width: 75px;
+	width: 60px;
 }
 
 /* family Search Checkboxes */
@@ -289,13 +267,13 @@ div.name span.bold {
 }
 
 div.name .images {
-    position: absolute;
-    top: -1px;
+    position: fixed;
+    top: 51px;
     border: 1px solid black;
     z-index: 9;
     padding: 5px;
     background-color: #ccc;
-    left: 420px;
+    right: 10px;
     box-shadow: 0 5px 20px -8px black;
 }
 
@@ -598,10 +576,10 @@ input[type="text"].searchBox {
     border-bottom: 1px solid black;
     line-height: 25px;
     z-index: 9;
-    position: relative;
-    top: -5px;
+    position: fixed;
+    top: 52px;
     background-color: #ccc;
-    left: 10px;
+    right: 335px;
     border-left: 1px solid black;
     border-right: 1px solid black;
     box-shadow: 0 5px 20px -8px black;
@@ -645,6 +623,24 @@ input[type="text"].searchBox {
 	font-size: 10px;
 	line-height: 12px;
 	color: #888;
+}
+
+.moveLink {
+	display: block;
+    position: absolute;
+    left: 10px;
+}
+
+.moveLink a {
+	border: 1px solid #ccc;
+    background-color: #fff;
+    width: 13px;
+    text-align: center;
+    display: block;
+    position: relative;
+    top: -23px;
+    height: 24px;
+    vertical-align: middle;
 }
 
 </style>

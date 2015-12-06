@@ -4,38 +4,16 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
-	xmlns:h="http://xmlns.jcp.org/jsf/html">
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:herzog="http://java.sun.com/jsf/composite/herzog">
 
 <h:outputText value="Kinder" styleClass="heading" />
 
 <h:panelGroup styleClass="content" layout="block">
 	<h:outputText value="Keine Kinder vorhanden" rendered="#{fn:length(Person.person.kinder) == 0}" />
-	<h:dataTable value="#{Person.person.kinder}" var="kind" styleClass="personReference content" rendered="#{fn:length(Person.person.kinder) &gt; 0}">
-		<h:column>
-			<h:commandLink
-				value="#{kind.nachname}, #{kind.vornamen}"
-				actionListener="#{Navigation.open}" styleClass="person_mann_#{kind.mann}">
-				<f:param name="personId" value="#{kind.id}" />
-			</h:commandLink>
-		</h:column>
-		<h:column>
-			<h:outputText value="#{kind.geburt}">
-				<f:converter converterId="event" />
-			</h:outputText>
-		</h:column>
-		<h:column>
-			<h:outputText value="#{kind.geburt.location}" />
-		</h:column>
-		<h:column>
-			<h:outputText value="#{kind.tod}">
-				<f:converter converterId="event" />
-			</h:outputText>
-		</h:column>
-		<h:column>
-			<h:outputText value="#{kind.tod.location}" />
-		</h:column>
-	</h:dataTable>
+	<ui:repeat value="#{Person.person.kinder}" var="kind" styleClass="content" rendered="#{fn:length(Person.person.kinder) &gt; 0}">
+		<herzog:person person="#{kind}" navigation="#{Navigation.open}" />
+	</ui:repeat>
 </h:panelGroup>
-
 
 </html>

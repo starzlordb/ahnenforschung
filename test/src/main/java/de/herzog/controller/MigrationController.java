@@ -27,6 +27,7 @@ import de.herzog.enums.EventTypeEnum;
 import de.herzog.enums.person.EventDateModifierEnum;
 import de.herzog.util.Helper;
 import de.herzog.util.Logger;
+import de.herzog.views.person.KekuleView;
 import de.herzog.views.person.PersonView;
 
 @ManagedBean(name = MigrationController.MANAGED_BEAN_NAME)
@@ -69,8 +70,8 @@ public class MigrationController extends AbstractController {
 		for (PersonBean personBean : personBeans) {
 			PersonView person = PersonView.fromBean(PersonView.class, personBean, Helper.getManagedBean(PersonController.class));
 			
-			for (Long kekule : person.getKekule()) {
-				personIdByKekule.put(kekule, person.getId());
+			for (KekuleView kekule : person.getKekule()) {
+				personIdByKekule.put(kekule.getKekule(), person.getId());
 			}
 		}
 		

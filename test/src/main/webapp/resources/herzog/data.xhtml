@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+
+<composite:interface>
+	<composite:attribute name="value" />
+	<composite:attribute name="editable" />
+	<composite:attribute name="styleClass" />
+	<composite:attribute name="fs" />
+</composite:interface>
+	  
+<composite:implementation>
+	<h:panelGrid columns="2" styleClass="stammdatum" rendered="#{!cc.attrs.editable}">
+		<h:outputText value="#{cc.attrs.value}" styleClass="#{cc.attrs.styleClass}" />
+		<h:panelGroup layout="block" styleClass="familySearch #{cc.attrs.fs}" />
+	</h:panelGrid>
+	<h:panelGrid columns="2" styleClass="stammdatum" rendered="#{cc.attrs.editable &amp;&amp; cc.attrs.styleClass != 'konfession'}">
+		<h:inputText value="#{cc.attrs.value}" styleClass="#{cc.attrs.styleClass}" />
+		<h:panelGroup layout="block" style="cursor: pointer;" styleClass="familySearch #{cc.attrs.fs}" onclick="EventUtils.familySearch(this);">
+			<h:selectBooleanCheckbox value="#{cc.attrs.fs}" style="display: none;" />
+		</h:panelGroup>
+	</h:panelGrid>
+	<h:panelGrid columns="3" styleClass="stammdatum" rendered="#{cc.attrs.editable &amp;&amp; cc.attrs.styleClass == 'konfession'}">
+		<h:inputText value="#{cc.attrs.value}" styleClass="#{cc.attrs.styleClass}" />
+		<h:panelGroup layout="block" style="cursor: pointer;" styleClass="familySearch #{cc.attrs.fs}" onclick="EventUtils.familySearch(this);">
+			<h:selectBooleanCheckbox value="#{cc.attrs.fs}" style="display: none;" />
+		</h:panelGroup>
+		<h:panelGroup>
+			<a class="button" href="#" onclick="return EventUtils.changeReligion(this, 'evangelisch');">ev</a>
+			<a class="button" href="#" onclick="return EventUtils.changeReligion(this, 'lutherisch');">luth</a>
+			<a class="button" href="#" onclick="return EventUtils.changeReligion(this, 'reformiert');">ref</a>
+			<a class="button" href="#" onclick="return EventUtils.changeReligion(this, 'römisch-katholisch');">rk</a>
+			<a class="button" href="#" onclick="return EventUtils.changeReligion(this, 'katholisch');">kath</a>
+		</h:panelGroup>
+	</h:panelGrid>	
+</composite:implementation>
+
+</html>
