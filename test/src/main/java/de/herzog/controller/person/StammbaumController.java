@@ -51,6 +51,10 @@ public class StammbaumController extends AbstractController {
 		
 		List<List<PersonView>> stammbaum = getStammbaum();
 		
+		setStammbaum(addNewGeneration(stammbaum));
+	}
+	
+	public List<List<PersonView>> addNewGeneration(List<List<PersonView>> stammbaum) {
 		List<PersonView> newGeneration = new ArrayList<PersonView>();
 		for (PersonView person : stammbaum.get(stammbaum.size() - 1)) {
 			if (person == null) {
@@ -62,7 +66,8 @@ public class StammbaumController extends AbstractController {
 			}
 		}
 		stammbaum.add(newGeneration);
-		setStammbaum(stammbaum);
+		
+		return stammbaum;
 	}
 	
 	public void closeGeneration(ActionEvent event) {

@@ -49,17 +49,20 @@ public class AbstractDomainRepository<ADB extends AbstractDomainBean> implements
 		}
 		
 		ADB result = null;		
-		Session session = HibernateUtil.getSessionFactory().openSession();
+		Session session = HibernateUtil.getSessionFactory().getCurrentSession();//.openSession();
 		Transaction tx = null;
         try {
             tx = session.beginTransaction();
-            result = (ADB) session.createQuery("FROM " + className.getName() + " WHERE deleted = FALSE AND id = " + id).list().get(0);
+            List<ADB> list = session.createQuery("FROM " + className.getName() + " WHERE deleted = FALSE AND id = " + id).list();
+            if (list != null && list.size() > 0) {
+            	result = (ADB) list.get(0);
+            }
         } catch (Exception e) {
             log.warn(e);
         } finally {
         	try { tx.rollback(); } catch (Exception e) {}
-            session.flush();
-            session.close();
+            //session.flush();
+            //session.close();
         }
         
         return result;

@@ -23,7 +23,23 @@ div.generation td {
 
 </style>
 
-<h:commandLink value="Export" actionListener="#{ExcelExport.generateExport}" />
+<h:panelGroup layout="block" styleClass="buttonbar">
+	<h:outputText value="Generationen:" rendered="#{!ExcelExport.inProgress}" />
+	<h:inputText value="#{ExcelExport.generations}" rendered="#{!ExcelExport.inProgress}" style="background-color: #ddd; width: 20px;border: 0;text-align: center;" />
+	<h:commandLink value="Exportieren" actionListener="#{ExcelExport.generateExport}" rendered="#{!ExcelExport.inProgress}" />
+	
+	<h:commandLink value="Download" actionListener="#{ExcelExport.download}" rendered="#{ExcelExport.progress == 100}" />
+	
+	<h:panelGroup layout="block" style="height: 100%; line-height: 25px; text-align: center; width: 300px;" rendered="#{ExcelExport.inProgress}">
+		<h:panelGroup layout="block" style="background-color: #aaa; height: 100%; width: #{ExcelExport.progress * 3}px;">
+			<h:commandLink>
+				<h:outputText value="#{ExcelExport.progress / 100}">
+					<f:convertNumber type="percent" />
+				</h:outputText>
+			</h:commandLink>
+		</h:panelGroup>
+	</h:panelGroup>
+</h:panelGroup>
 
 <ui:repeat value="#{Stammbaum.stammbaum}" var="maxGen" varStatus="_status">
 	<h:panelGroup rendered="#{_status.last}">
