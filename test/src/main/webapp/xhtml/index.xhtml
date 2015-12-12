@@ -20,11 +20,11 @@
 			<h:commandLink value="#{Person.person.nachname}, #{Person.person.vornamen}" styleClass="user_#{Person.person.mann} active_#{Navigation.page == 'PERSON'}" actionListener="#{Navigation.navigate}">
 				<f:param name="action" value="PERSON" />
 			</h:commandLink>
+			<h:commandLink value="Schnellansicht" styleClass="user_#{Person.person.mann} active_#{Navigation.page == 'QUICKVIEW'}" actionListener="#{Navigation.navigate}">
+				<f:param name="action" value="QUICKVIEW" />
+			</h:commandLink>
 			<h:commandLink value="Stammbaum" styleClass="stammbaum active_#{Navigation.page == 'STAMMBAUM'}" actionListener="#{Navigation.navigate}">
 				<f:param name="action" value="STAMMBAUM" />
-			</h:commandLink>
-			<h:commandLink value="Migration" styleClass="stammbaum active_#{Navigation.page == 'MIGRATION'}" actionListener="#{Navigation.navigate}">
-				<f:param name="action" value="MIGRATION" />
 			</h:commandLink>
 			<h:panelGroup layout="block" style="clear: both;" />
 		</h:panelGroup>
@@ -42,6 +42,10 @@
 		<h:panelGroup styleClass="contentBox" layout="block">
 			<h:panelGroup rendered="#{Navigation.page == 'PERSON'}" layout="block" style="padding: 5px; position: relative;">
 				<ui:include src="person/person.xhtml"></ui:include>
+			</h:panelGroup>
+			
+			<h:panelGroup rendered="#{Navigation.page == 'QUICKVIEW'}" layout="block" style="padding: 5px; position: relative;">
+				<ui:include src="person/quickview.xhtml"></ui:include>
 			</h:panelGroup>
 			
 			<h:panelGroup rendered="#{Navigation.page == 'STAMMBAUM'}" layout="block" style="padding: 5px;">
