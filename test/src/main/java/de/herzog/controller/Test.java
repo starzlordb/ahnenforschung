@@ -22,6 +22,8 @@ public class Test extends AbstractController {
     	super.postConstruct();
     	
     	testRepository = new TestRepository();
+    	
+    	// Super hotifx
     }
 	
 	private String test = "blabla";
