@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:fn="http://xmlns.jcp.org/jsp/jstl/functions"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:herzog="http://java.sun.com/jsf/composite/herzog">
+	
+<ui:include src="header.xhtml" />
+
+<!-- Eltern -->
+<h:panelGroup layout="block" styleClass="quickview">
+	<h:panelGroup layout="block" styleClass="heading">
+		<h:outputText value="Eltern" styleClass="tmp" />
+	</h:panelGroup>
+		
+	<herzog:person person="#{Person.person.vater}" navigation="#{Navigation.open}" rendered="#{Person.person.vaterId != -1}" />
+	<h:panelGrid columns="1" styleClass="personReference finished" rendered="#{Person.person.vaterId == -1}">
+		<h:outputText value="kein Vater gefunden" styleClass="person_mann_true" />
+	</h:panelGrid>
+	
+	<herzog:person person="#{Person.person.mutter}" navigation="#{Navigation.open}" rendered="#{Person.person.mutterId != -1}" />
+	<h:panelGrid columns="1" styleClass="personReference finished" rendered="#{Person.person.mutterId == -1}">
+		<h:outputText value="keine Mutter gefunden" styleClass="person_mann_false" />
+	</h:panelGrid>
+</h:panelGroup>
+
+<!-- Eckdaten -->
+<h:panelGroup layout="block" styleClass="quickview">
+	<h:panelGroup layout="block" styleClass="heading">
+		<h:outputText value="Daten" styleClass="tmp" />
+	</h:panelGroup>
+	
+	<h:panelGrid columns="4">
+		<herzog:data value="#{Person.person.location}" fs="#{Person.person.locationFamilySearch}" styleClass="location" editable="false" />
+		<herzog:data value="#{Person.person.konfession}" fs="#{Person.person.konfessionFamilySearch}" styleClass="konfession" editable="false" />
+		<herzog:data value="#{Person.person.beruf}" fs="#{Person.person.berufFamilySearch}" styleClass="beruf" editable="false" />
+		<h:outputText value="#{Person.person.period}" />
+	</h:panelGrid>
+	
+	<herzog:event event="#{Person.person.geburt}" styleClass="geburt" editable="false" />
+	<herzog:event event="#{Person.person.taufe}" styleClass="taufe" editable="false" />
+	
+	<ui:repeat value="#{Person.person.hochzeiten}" var="hochzeit" varStatus="_hochzeit">
+		<h:panelGroup rendered="#{hochzeit.deleted == false}">
+			<herzog:event event="#{hochzeit.hochzeit}" styleClass="hochzeit" editable="false" />
+			<h:panelGroup layout="block" style="padding-left: 20px;">
+				<herzog:person person="#{hochzeit.frau}" navigation="#{Navigation.open}" rendered="#{Person.person.mann}" />
+				<herzog:person person="#{hochzeit.mann}" navigation="#{Navigation.open}" rendered="#{!Person.person.mann}" />
+			</h:panelGroup>			
+		</h:panelGroup>
+	</ui:repeat>
+	
+	<herzog:event event="#{Person.person.tod}" styleClass="tod" editable="false" />
+</h:panelGroup>
+
+<!-- Kinder -->
+<h:panelGroup layout="block" styleClass="quickview">
+	<h:outputText value="Kinder" styleClass="heading" />
+
+	<h:outputText value="Keine Kinder vorhanden" rendered="#{fn:length(Person.person.kinder) == 0}" />
+	<ui:repeat value="#{Person.person.kinder}" var="kind" styleClass="content" rendered="#{fn:length(Person.person.kinder) &gt; 0}">
+		<herzog:person person="#{kind}" navigation="#{Navigation.open}" />
+	</ui:repeat>
+</h:panelGroup>
+
+<h:panelGroup layout="block" styleClass="quickview">
+	<h:inputTextarea escape="false" value="#{Person.person.notice}" styleClass="notiz" disabled="true" />
+</h:panelGroup>
+
+</html>

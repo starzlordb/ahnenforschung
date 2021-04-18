@@ -622,3 +622,60 @@ input[type="text"].searchBox {
     height: 24px;
     vertical-align: middle;
 }
+
+/* Quickview */
+.quickview {
+	margin-bottom: 20px;
+}
+
+.quickview table.personReference,
+.quickview table.eventView,
+.quickview table.stammdatum {
+	margin-bottom: 2px;
+}
+
+.quickview table.personReference td,
+.quickview table.eventView td,
+.quickview table.stammdatum td {
+	background-color: transparent;
+	border: 0;
+	white-space: nowrap;
+	width: auto;
+	padding: 0;
+}
+
+.quickview table.eventView td:nth-child(1),
+.quickview table.eventView td:nth-child(2) {
+	font-weight:bold;
+}
+
+.quickview .nachweis {
+	width: 20px;
+}
+
+.quickview .nachweis.false {
+	background: transparent;
+}
+
+.quickview .nachweis.true {
+	background-color: transparent;
+	outline: 0;
+}
+
+.quickview .familySearch {
+	width: 20px;
+}
+
+.quickview .familySearch.false {
+	background: transparent;
+}
+
+.quickview .familySearch.true {
+	background-color: transparent;
+	outline: 0;
+}
+
+.quickview .notiz {
+	border: 0;
+	background-color: transparent;
+}

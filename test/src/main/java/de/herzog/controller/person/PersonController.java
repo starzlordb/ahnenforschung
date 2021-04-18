@@ -47,7 +47,7 @@ public class PersonController extends AbstractController {
 	private Logger log = new Logger(PersonController.class);
 	
 	private PersonView person;
-	private boolean editable = false;
+	private boolean editable = true;
 	
 	// search
 	private List<PersonView> searchedPersons;

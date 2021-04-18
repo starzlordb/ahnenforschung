@@ -18,7 +18,9 @@ public class Navigation extends AbstractController {
 	
 	public static final String MANAGED_BEAN_NAME = "Navigation";
 	
-	private PageEnum page = PageEnum.PERSON;
+	public static final PageEnum defaultPage = PageEnum.QUICKVIEW;
+	
+	private PageEnum page = PageEnum.QUICKVIEW;
 	private long personId;
 	
 	private Logger log = new Logger(Navigation.class);
@@ -37,7 +39,7 @@ public class Navigation extends AbstractController {
 		} catch (Exception e) {
 			log.warn(e);
 			
-			setPage(PageEnum.PERSON);
+			setPage(defaultPage);
 		}
 	}
 	
